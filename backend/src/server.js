@@ -6,6 +6,7 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 5000;
 
 // Security middleware
@@ -92,7 +93,7 @@ app.use('/uploads', (req, res, next) => {
 }));
 
 // Database connection (non-blocking for development)
-const { testConnection } = require('./config/database');
+const { testConnection, pool } = require('./config/database');
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -178,6 +179,17 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
+});
+
+// Temporary DB connectivity test
+app.get('/api/db-test', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT 1 AS ok');
+    res.json({ success: true, db: 'connected' });
+  } catch (error) {
+    console.error('DB test error:', error.message);
+    res.json({ success: false, error: error.message });
+  }
 });
 
 // Error handling middleware
