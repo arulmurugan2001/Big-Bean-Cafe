@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Next.js build/cache
+.next/
+frontend/.next/
+out/
+dist/
+build/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env.local
+frontend/.env.production
+
+# Logs
+*.log
+build-log*.txt
+dbcheck.txt
+
+# Temp/test files
+backend/tmp/
+backend/tmp-*.js
+frontend/tmp/
+*.bak
+*.new
+*.tsbuildinfo
+
+# Generated reports
+*.pdf
+*.xlsx
+
+# Runtime uploads - don't push customer/admin uploads
+backend/src/uploads/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+backend/login.json
+
+database/bigbean_cafe.sql
