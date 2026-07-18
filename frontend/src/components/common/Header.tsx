@@ -13,13 +13,12 @@ import { cartCount } from '@/lib/cart'
 import { getCustomer, clearCustomerSession, isCustomerLoggedIn } from '@/lib/customerAuth'
 
 const NAV_PRIMARY = [
-  { name: 'Home',      href: '/' },
-  { name: 'About',     href: '/about' },
-  { name: 'Menu',      href: '/menu' },
-  { name: 'Outlets',   href: '/outlets' },
-  { name: 'Offers',    href: '/offers', special: true },
-  { name: 'Events',    href: '/events' },
-  { name: 'Contact',   href: '/contact' },
+  { name: 'HOME',      href: '/' },
+  { name: 'ABOUT',     href: '/about' },
+  { name: 'MENU',      href: '/menu' },
+  { name: 'OUTLETS',   href: '/outlets' },
+  { name: 'OFFERS',    href: '/offers' },
+  { name: 'CONTACT',   href: '/contact' },
 ]
 
 const NAV_MORE = [
@@ -196,13 +195,7 @@ export default function Header() {
                       : 'text-[#32180c] hover:bg-[#F5E6D3] hover:text-[#9b5b1d]'
                   }`}
                 >
-                  {item.special ? (
-                    <span className="flex items-center gap-1">
-                      <span className="text-[8px] text-[#C9943A]">●</span>
-                      {item.name}
-                      <span className="text-[8px] text-[#C9943A]">●</span>
-                    </span>
-                  ) : item.name}
+                  {item.name}
                 </Link>
               )
             })}
@@ -368,9 +361,7 @@ export default function Header() {
                         active ? 'bg-[#3D1F0D] text-[#FFF7ED]' : 'text-[#3D1F0D] hover:bg-[#F5E6D3]'
                       }`}
                     >
-                      {item.special && <span className="text-[8px] text-[#C9943A]">●</span>}
                       {item.name}
-                      {item.special && <span className="text-[8px] text-[#C9943A]">●</span>}
                     </Link>
                   )
                 })}
