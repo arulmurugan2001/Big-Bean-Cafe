@@ -45,3 +45,5 @@ Thumbs.db
 backend/login.json
 
 database/bigbean_cafe.sql
+
+database/*backup*.sql
