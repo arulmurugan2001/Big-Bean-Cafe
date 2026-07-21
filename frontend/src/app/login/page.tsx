@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -25,12 +25,12 @@ export default function CustomerLogin() {
   const [showPw, setShowPw]         = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError]           = useState('')
+  const [socialMsg, setSocialMsg]   = useState('')
 
-  // Lock body scroll while on this page
-  useEffect(() => {
-    document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = '' }
-  }, [])
+  const handleComingSoon = (provider: string) => {
+    setSocialMsg(`${provider} login will be available soon.`)
+    setTimeout(() => setSocialMsg(''), 2500)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -58,28 +58,15 @@ export default function CustomerLogin() {
   }
 
   return (
-    /* h-screen + overflow-hidden — no page scroll */
-    <div className="relative h-screen w-full overflow-hidden bg-[#FFF7ED]">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#FFF7ED]">
+      <div className="grid min-h-screen lg:grid-cols-[520px_1fr]">
 
-      {/* Full-screen background */}
-      <img
-        src="/images/auth/customer-auth-bg.png"
-        alt="Big Bean Café Customer Login"
-        className="absolute inset-0 h-full w-full object-cover object-right"
-      />
-
-      {/* Soft left overlay — right character stays clear */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#FFF7ED]/96 via-[#FFF7ED]/78 to-transparent" />
-
-      {/* Centred form column — left half */}
-      <div className="relative z-10 flex h-screen items-center px-4 sm:px-6 lg:px-10">
-        <div className="w-full max-w-[480px] lg:ml-[6vw]">
-
-          {/* Card — max-h + overflow-y-auto so tiny screens can still scroll INSIDE card */}
-          <div className="max-h-[92vh] overflow-y-auto rounded-[28px] border border-[#E6C7A8]/70 bg-white/72 p-5 shadow-[0_24px_70px_rgba(61,31,13,0.16)] backdrop-blur-xl sm:p-6 lg:p-7">
+        {/* Left login card */}
+        <div className="flex items-center justify-center px-4 py-8 sm:px-6 lg:px-10">
+          <div className="w-full max-w-[480px] overflow-y-auto rounded-[24px] border border-[#E6C7A8]/70 bg-white/72 p-5 shadow-[0_24px_70px_rgba(61,31,13,0.16)] backdrop-blur-xl transition-all duration-500 hover:shadow-[0_28px_80px_rgba(61,31,13,0.2)] sm:p-6 lg:p-7">
 
             {/* Badge + Logo */}
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
               <span className="rounded-full border border-[#E6C7A8] bg-[#FFF7ED] px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#6B3520]">
                 Big Bean Café Customer
               </span>
@@ -88,7 +75,7 @@ export default function CustomerLogin() {
                 alt="Big Bean Café"
                 width={105}
                 height={48}
-                className="w-[90px] md:w-[105px] object-contain"
+                className="w-[90px] object-contain md:w-[105px]"
                 style={{ width: 'auto', height: 'auto' }}
                 priority
               />
@@ -159,16 +146,47 @@ export default function CustomerLogin() {
 
               {/* Login */}
               <button type="submit" disabled={submitting}
-                className="w-full rounded-full bg-[#3D1F0D] py-3 text-sm font-black tracking-wide text-[#FFF7ED] transition hover:bg-[#C9943A] hover:text-[#120905] disabled:opacity-60">
+                className="w-full rounded-full bg-[#3D1F0D] py-3 text-sm font-black tracking-wide text-[#FFF7ED] transition hover:-translate-y-0.5 hover:bg-[#C9943A] hover:text-[#120905] disabled:opacity-60">
                 {submitting ? 'Logging in…' : 'Login to My Account'}
               </button>
 
               {/* Guest */}
               <a href="https://bigbeancafe.store" target="_blank" rel="noopener noreferrer"
-                className="block w-full rounded-full border-2 border-[#3D1F0D] py-3 text-center text-sm font-black text-[#3D1F0D] transition hover:bg-[#FFF7ED]">
+                className="block w-full rounded-full border-2 border-[#3D1F0D] py-3 text-center text-sm font-black text-[#3D1F0D] transition hover:-translate-y-0.5 hover:bg-[#FFF7ED]">
                 Continue as Guest
               </a>
+
+              {/* Divider */}
+              <div className="relative py-2">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-[#E6C7A8]" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-[#FFF7ED] px-2 text-[11px] font-bold text-[#A98A74]">or continue with</span>
+                </div>
+              </div>
+
+              {/* Google */}
+              <button type="button" onClick={() => handleComingSoon('Google')}
+                className="flex w-full items-center justify-center gap-2 rounded-[14px] border border-[#E6C7A8] bg-white py-2.5 text-sm font-black text-[#3D1F0D] transition hover:-translate-y-0.5 hover:bg-[#FFF7ED]">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#FFF7ED] text-xs font-black text-[#EA4335]">G</span>
+                Continue with Google
+              </button>
+
+              {/* Facebook */}
+              <button type="button" onClick={() => handleComingSoon('Facebook')}
+                className="flex w-full items-center justify-center gap-2 rounded-[14px] border border-[#E6C7A8] bg-white py-2.5 text-sm font-black text-[#3D1F0D] transition hover:-translate-y-0.5 hover:bg-[#FFF7ED]">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#FFF7ED] text-xs font-black text-[#1877F2]">f</span>
+                Continue with Facebook
+              </button>
             </form>
+
+            {/* Social coming soon */}
+            {socialMsg && (
+              <div className="mt-3 rounded-2xl border border-[#E6C7A8] bg-[#FFF7ED] px-4 py-2.5 text-sm font-bold text-[#6B3520]">
+                {socialMsg}
+              </div>
+            )}
 
             {/* Trust + links */}
             <p className="mt-4 text-center text-[11px] text-[#A98A74]">🔒 Secure customer login for Big Bean Café.</p>
@@ -182,6 +200,16 @@ export default function CustomerLogin() {
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* Right image panel */}
+        <div className="relative hidden overflow-hidden bg-[#FFF7ED] lg:flex">
+          <img
+            src="/images/auth/customer-auth-bg.png"
+            alt="Big Bean Café Customer Login"
+            className="h-full w-full object-contain object-right transition-transform duration-[10s] hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FFF7ED]/40 via-transparent to-transparent" />
         </div>
       </div>
     </div>
