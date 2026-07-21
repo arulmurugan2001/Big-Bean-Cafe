@@ -17,7 +17,7 @@
 /* ── Grid ── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 36px;
 }
 
@@ -190,17 +190,27 @@
 
 /* ── Tablet ── */
 @media (max-width: 1024px) {
-  .grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .imgBox { height: 320px; }
   .skeletonImg { height: 320px; }
+  .skeleton:nth-child(n+5) { display: none; }
 }
 
 /* ── Mobile ── */
 @media (max-width: 640px) {
-  .section { padding: 64px 0 72px; }
-  .grid { grid-template-columns: 1fr; gap: 28px; }
-  .imgBox { height: 280px; }
-  .skeletonImg { height: 280px; }
-  .priceBadge { font-size: 22px; padding: 14px 22px; }
-  .title { font-size: 18px; }
+  .section { padding: 56px 0; }
+  .grid { grid-template-columns: 1fr; gap: 18px; }
+  .card { border-radius: 22px; }
+  .imgBox { height: 220px; }
+  .skeletonImg { height: 220px; }
+  .title { font-size: 20px; line-height: 1.25; }
+  .desc { font-size: 14px; line-height: 1.6; }
+  .priceBadge { font-size: 13px; padding: 7px 12px; }
+  .orderBtn,
+  .btnPrimary,
+  .btnOutline {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
 }

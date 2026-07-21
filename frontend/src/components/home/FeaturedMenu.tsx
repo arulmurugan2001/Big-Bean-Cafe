@@ -3,23 +3,42 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Leaf } from 'lucide-react'
+import { apiFetch } from '@/lib/api'
 import styles from './FeaturedMenu.module.css'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+const BACKEND_ORIGIN = API_URL.replace('/api', '')
 const ORDER_URL = 'https://bigbeancafe.store'
 
-const FEATURED_CATEGORIES = [
-  { id: 78, label: 'Hot Beverages',  fallbackImg: '/images/highlights/coffee.jpg' },
-  { id: 77, label: 'Cold Beverages', fallbackImg: '/images/highlights/coffee.jpg' },
-  { id: 76, label: 'Food',           fallbackImg: '/images/highlights/food.jpg'   },
-  { id: 79, label: 'Bakery',         fallbackImg: '/images/highlights/dessert.jpg'},
-]
+const PRIORITY_CATEGORIES = ['Hot Beverages', 'Cold Beverages', 'Food', 'Bakery', 'Dessert']
+
+function getCategoryFallback(label = '') {
+  const l = label.toLowerCase()
+  if (l.includes('beverage') || l.includes('coffee') || l.includes('drink') || l.includes('shake')) {
+    return '/images/highlights/coffee.jpg'
+  }
+  if (l.includes('food') || l.includes('snack') || l.includes('sandwich')) {
+    return '/images/highlights/food.jpg'
+  }
+  if (l.includes('bakery') || l.includes('dessert') || l.includes('sweet') || l.includes('cake')) {
+    return '/images/highlights/dessert.jpg'
+  }
+  return '/images/highlights/coffee.jpg'
+}
+
+function getImageUrl(image?: string | null, fallback = '/images/highlights/coffee.jpg') {
+  if (!image) return fallback
+  if (image.startsWith('http')) return image
+  if (image.startsWith('/uploads')) return `${BACKEND_ORIGIN}${image}`
+  if (image.startsWith('uploads')) return `${BACKEND_ORIGIN}/${image}`
+  return image
+}
 
 interface FeaturedItem {
   id: number
   name: string
   description: string
-  image_url: string | null
+  image_url: string
   display_price: string
   is_veg: boolean
   categoryLabel: string
@@ -27,10 +46,14 @@ interface FeaturedItem {
 }
 
 const FALLBACK_ITEMS: FeaturedItem[] = [
-  { id: 1, name: 'Biscoff Shake',     description: 'Thick, creamy shake blended with caramelized Biscoff cookies.', image_url: '/images/highlights/coffee.jpg',  display_price: '₹290',     is_veg: true,  categoryLabel: 'Cold Beverages', fallbackImg: '/images/highlights/coffee.jpg'  },
-  { id: 2, name: 'Espresso Tonic',    description: 'Short shot of espresso poured over ice with tonic water.',         image_url: '/images/highlights/coffee.jpg',  display_price: '₹280',     is_veg: true,  categoryLabel: 'Cold Beverages', fallbackImg: '/images/highlights/coffee.jpg'  },
-  { id: 3, name: 'Café Sandwich',     description: 'Fresh café sandwich served with delicious fillings and sides.',     image_url: '/images/highlights/food.jpg',    display_price: 'View Menu', is_veg: false, categoryLabel: 'Food',           fallbackImg: '/images/highlights/food.jpg'    },
+  { id: 1, name: 'Biscoff Shake',     description: 'Thick, creamy shake blended with caramelized Biscoff cookies.', image_url: '/images/highlights/coffee.jpg',  display_price: '₹290',  is_veg: true,  categoryLabel: 'Cold Beverages', fallbackImg: '/images/highlights/coffee.jpg' },
+  { id: 2, name: 'Espresso Tonic',    description: 'Short shot of espresso poured over ice with tonic water.',         image_url: '/images/highlights/coffee.jpg',  display_price: '₹280',  is_veg: true,  categoryLabel: 'Cold Beverages', fallbackImg: '/images/highlights/coffee.jpg' },
+  { id: 3, name: 'Café Sandwich',     description: 'Fresh café sandwich served with delicious fillings and sides.',     image_url: '/images/highlights/food.jpg',    display_price: 'View Menu', is_veg: false, categoryLabel: 'Food',           fallbackImg: '/images/highlights/food.jpg' },
   { id: 4, name: 'Chocolate Dessert', description: 'A sweet café dessert made for perfect coffee moments.',              image_url: '/images/highlights/dessert.jpg', display_price: 'View Menu', is_veg: true,  categoryLabel: 'Dessert',        fallbackImg: '/images/highlights/dessert.jpg' },
+  { id: 5, name: 'Classic Espresso',  description: 'Rich, bold espresso crafted with freshly ground coffee beans.',      image_url: '/images/highlights/coffee.jpg',  display_price: '₹150',  is_veg: true,  categoryLabel: 'Hot Beverages',  fallbackImg: '/images/highlights/coffee.jpg' },
+  { id: 6, name: 'Iced Latte',        description: 'Chilled espresso with smooth milk over ice.',                        image_url: '/images/highlights/coffee.jpg',  display_price: '₹220',  is_veg: true,  categoryLabel: 'Cold Beverages', fallbackImg: '/images/highlights/coffee.jpg' },
+  { id: 7, name: 'Butter Croissant',  description: 'Buttery, flaky croissant baked fresh daily.',                        image_url: '/images/highlights/dessert.jpg', display_price: '₹120',  is_veg: true,  categoryLabel: 'Bakery',         fallbackImg: '/images/highlights/dessert.jpg' },
+  { id: 8, name: 'Veggie Wrap',       description: 'Fresh vegetables wrapped in a soft tortilla with tangy sauce.',      image_url: '/images/highlights/food.jpg',    display_price: '₹250',  is_veg: true,  categoryLabel: 'Food',           fallbackImg: '/images/highlights/food.jpg' },
 ]
 
 function ProductImg({ src, fallback, alt }: { src: string; fallback: string; alt: string }) {
@@ -66,32 +89,78 @@ export default function FeaturedMenu() {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      const results: FeaturedItem[] = []
-      for (const cat of FEATURED_CATEGORIES) {
-        if (results.length >= 4) break
-        try {
-          const res  = await fetch(`${API_BASE}/api/store-menu/products/${cat.id}`)
-          if (!res.ok) continue
-          const json = await res.json()
-          if (!json.success || !Array.isArray(json.data)) continue
-          const pick = (json.data as any[]).find(
-            (p) => p.name && p.is_available !== false && p.status !== 0
-          )
-          if (pick) results.push({
-            id:            pick.id,
-            name:          pick.name,
-            description:   pick.description || 'Freshly prepared Big Bean Café favourite.',
-            image_url:     pick.image_url || null,
-            display_price: pick.display_price || 'View Menu',
-            is_veg:        pick.product_type === 'veg',
-            categoryLabel: cat.label,
-            fallbackImg:   cat.fallbackImg,
-          })
-        } catch { /* skip */ }
-      }
-      if (!cancelled) {
-        setItems(results.length > 0 ? results : FALLBACK_ITEMS)
-        setLoading(false)
+      try {
+        const json = await apiFetch('/store-menu')
+        if (!json?.success || !Array.isArray(json.data)) throw new Error('Invalid menu response')
+
+        const all: FeaturedItem[] = []
+        for (const category of json.data as any[]) {
+          const catName = category.name || ''
+          const catFallback = getCategoryFallback(catName)
+          const products = Array.isArray(category.items) ? category.items : []
+          for (const item of products) {
+            if (!item?.name) continue
+            if (item.is_available === false || item.status === 0 || item.status === 'inactive') continue
+
+            all.push({
+              id: item.id,
+              name: item.name,
+              description: item.description || 'Freshly prepared Big Bean Café favourite.',
+              image_url: getImageUrl(item.image_url || item.image || item.thumbnail, catFallback),
+              display_price: item.display_price || (item.price != null ? `₹${item.price}` : 'View Menu'),
+              is_veg: item.is_veg === true || String(item.product_type || '').toLowerCase() === 'veg',
+              categoryLabel: catName,
+              fallbackImg: catFallback,
+            })
+          }
+        }
+
+        // Group by category and pick round-robin by priority
+        const byCategory: Record<string, FeaturedItem[]> = {}
+        for (const item of all) {
+          byCategory[item.categoryLabel] = byCategory[item.categoryLabel] || []
+          byCategory[item.categoryLabel].push(item)
+        }
+
+        const priorityKeys = PRIORITY_CATEGORIES.map(p => {
+          const lower = p.toLowerCase()
+          return Object.keys(byCategory).find(k => k.toLowerCase() === lower) || p
+        })
+
+        const picked: FeaturedItem[] = []
+        let added = true
+        while (picked.length < 8 && added) {
+          added = false
+          for (const key of priorityKeys) {
+            if (picked.length >= 8) break
+            const next = byCategory[key]?.shift()
+            if (next) {
+              picked.push(next)
+              added = true
+            }
+          }
+          if (!added) {
+            for (const key of Object.keys(byCategory)) {
+              if (picked.length >= 8) break
+              const next = byCategory[key]?.shift()
+              if (next) {
+                picked.push(next)
+                added = true
+              }
+            }
+          }
+        }
+
+        if (!cancelled) {
+          setItems(picked.length > 0 ? picked : FALLBACK_ITEMS)
+          setLoading(false)
+        }
+      } catch (err: any) {
+        console.error('Featured menu load error:', err.message)
+        if (!cancelled) {
+          setItems(FALLBACK_ITEMS)
+          setLoading(false)
+        }
       }
     }
     load()
@@ -119,7 +188,7 @@ export default function FeaturedMenu() {
         {/* ── Cards ── */}
         {loading ? (
           <div className={styles.grid}>
-            {[0,1,2,3].map(i => <SkeletonCard key={i} />)}
+            {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-16">
