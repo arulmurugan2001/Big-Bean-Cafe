@@ -140,9 +140,27 @@ export default function ContactPage() {
   useEffect(() => {
     const loadHero = async () => {
       try {
-        const res = await fetch(`${API_URL}/contact-hero/active`)
-        const data = await res.json()
-        if (data.success && data.data) setHero(data.data)
+        const pageRes = await fetch(`${API_URL}/page-heroes/contact`)
+        const pageData = await pageRes.json()
+        if (pageData.success && pageData.data) {
+          const p = pageData.data
+          setHero({
+            ...DEFAULT_HERO,
+            eyebrow: p.label || DEFAULT_HERO.eyebrow,
+            title: p.title || DEFAULT_HERO.title,
+            highlight_text: '',
+            subtitle: p.subtitle || DEFAULT_HERO.subtitle,
+            button_primary_text: p.primary_button_text || DEFAULT_HERO.button_primary_text,
+            button_primary_url: p.primary_button_url || DEFAULT_HERO.button_primary_url,
+            button_secondary_text: p.secondary_button_text || DEFAULT_HERO.button_secondary_text,
+            button_secondary_url: p.secondary_button_url || DEFAULT_HERO.button_secondary_url,
+            image: p.hero_image || null
+          })
+        } else {
+          const res = await fetch(`${API_URL}/contact-hero/active`)
+          const data = await res.json()
+          if (data.success && data.data) setHero(data.data)
+        }
       } catch { }
       setLoadingHero(false)
     }
@@ -209,7 +227,7 @@ export default function ContactPage() {
 
       <main>
         {/* HERO */}
-        <section className="relative flex items-center overflow-hidden min-h-auto md:min-h-[460px] lg:min-h-[520px]" style={{ padding: '5.5rem 0 4rem' }}>
+        <section className="relative flex items-center overflow-hidden min-h-[380px] md:min-h-[460px] lg:min-h-[520px]" style={{ padding: '5.5rem 0 4rem' }}>
           <div className="absolute inset-0 bg-gradient-to-br from-[#120905] via-[#2A120B] to-[#5C2E12]" />
           {heroImg && (
             <img src={heroImg} alt={h.title} className="absolute inset-0 w-full h-full object-cover"

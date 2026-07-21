@@ -154,6 +154,8 @@ app.use('/api/franchise-hero', require('./routes/franchiseHeroRoutes'));
 app.use('/api/franchise-enquiries', require('./routes/franchiseEnquiryRoutes'));
 app.use('/api/corporate-hero', require('./routes/corporateHeroRoutes'));
 app.use('/api/corporate-enquiries', require('./routes/corporateEnquiryRoutes'));
+app.use('/api/page-heroes', require('./routes/pageHeroRoutes'));
+app.use('/api/admin/page-heroes', require('./routes/adminPageHeroRoutes'));
 app.use('/api/legal-pages', require('./routes/legalPageRoutes'));
 app.use('/api/newsletter', require('./routes/newsletterRoutes'));
 app.use('/api/customer-auth', require('./routes/customerAuthRoutes'));

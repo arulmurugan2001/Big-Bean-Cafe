@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
@@ -331,12 +332,12 @@ export default function AboutPage() {
 
                 {/* Button */}
                 <div style={{ marginTop: '2rem' }}>
-                  <a href="#"
+                  <Link href="/our-story"
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem', background: '#3D1F0D', color: '#FFF7ED', borderRadius: 100, padding: '0.9rem 2.2rem', fontSize: '0.74rem', fontWeight: 900, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.25s', boxShadow: '0 8px 28px rgba(61,31,13,0.2)' }}
                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; (e.currentTarget as HTMLElement).style.background = '#6B3520'; (e.currentTarget as HTMLElement).style.boxShadow = '0 14px 40px rgba(61,31,13,0.28)' }}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.background = '#3D1F0D'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(61,31,13,0.2)' }}>
                     Know Our Story <ArrowRight style={{ width: 14, height: 14 }} />
-                  </a>
+                  </Link>
                 </div>
               </div>
 

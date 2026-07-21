@@ -637,6 +637,27 @@ const corporateHeroUpload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }
 });
 
+// Dedicated page-heroes image uploader → uploads/page-heroes/
+ensureDirectoryExists(path.join(__dirname, '../uploads/page-heroes'));
+
+const pageHeroStorage = multer.diskStorage({
+  destination: (req, file, cb) => { cb(null, path.join(__dirname, '../uploads/page-heroes')); },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, `page-hero-${uniqueSuffix}${path.extname(file.originalname).toLowerCase()}`);
+  }
+});
+
+const pageHeroUpload = multer({
+  storage: pageHeroStorage,
+  fileFilter: (req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (allowed.includes(file.mimetype)) cb(null, true);
+    else cb(new Error('Only jpg, jpeg, png, webp images are allowed'), false);
+  },
+  limits: { fileSize: 5 * 1024 * 1024 }
+});
+
 // Dedicated career-hero image uploader → uploads/career-hero/
 ensureDirectoryExists(path.join(__dirname, '../uploads/career-hero'));
 
@@ -708,5 +729,6 @@ module.exports = {
   careerResumeUpload,
   franchiseHeroUpload,
   corporateHeroUpload,
-  legalPageUpload
+  legalPageUpload,
+  pageHeroUpload
 };

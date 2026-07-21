@@ -51,6 +51,7 @@ const NAV = [
       { href: '/admin/events-hero',        icon: Calendar,   label: 'Events Hero'        },
       { href: '/admin/franchise-hero',     icon: Store,      label: 'Franchise Hero'     },
       { href: '/admin/corporate-hero',     icon: Briefcase,  label: 'Corporate Hero'     },
+      { href: '/admin/page-heroes',        icon: Globe,      label: 'Page Heroes'        },
       { href: '/admin/legal-pages',        icon: FileText,   label: 'Legal Pages'        },
       { href: '/admin/seo',                icon: Globe,      label: 'SEO Management'     },
       { href: '/admin/seo/settings',       icon: Settings,   label: 'SEO Settings'       },
