@@ -18,7 +18,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 36px;
+  gap: 24px;
 }
 
 /* ── Card ── */
@@ -193,15 +193,21 @@
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .imgBox { height: 320px; }
   .skeletonImg { height: 320px; }
-  .skeleton:nth-child(n+5) { display: none; }
 }
 
 /* ── Mobile ── */
 @media (max-width: 640px) {
-  .section { padding: 56px 0; }
+  .section { padding: 50px 0; }
   .grid { grid-template-columns: 1fr; gap: 18px; }
-  .card { border-radius: 22px; }
+  .card { border-radius: 20px; overflow: hidden; }
   .imgBox { height: 220px; }
+  .productImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    padding: 0;
+  }
+  .textArea { padding: 18px; }
   .skeletonImg { height: 220px; }
   .title { font-size: 20px; line-height: 1.25; }
   .desc { font-size: 14px; line-height: 1.6; }
@@ -209,8 +215,10 @@
   .orderBtn,
   .btnPrimary,
   .btnOutline {
-    display: block;
+    display: flex;
     width: 100%;
     text-align: center;
+    justify-content: center;
+    align-items: center;
   }
 }
