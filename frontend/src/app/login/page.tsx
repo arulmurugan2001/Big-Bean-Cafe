@@ -184,16 +184,16 @@ export default function CustomerLogin() {
 
               {/* Google */}
               <button type="button" onClick={() => handleComingSoon('Google')}
-                className="flex w-full items-center justify-center gap-2 rounded-full border border-[#E6C7A8] bg-white py-3 text-sm font-black text-[#3D1F0D] transition hover:bg-[#FFF7ED]">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#FFF7ED] text-xs font-black text-[#EA4335]">G</span>
-                Continue with Google
+                className="flex w-full items-center justify-center gap-3 rounded-full border border-[#E6C7A8] bg-white/90 px-5 py-3 text-sm font-black text-[#3D1F0D] transition hover:-translate-y-0.5 hover:bg-[#FFF7ED] hover:shadow-md">
+                <img src="/images/icons/google.svg" alt="Google" className="h-5 w-5 object-contain" />
+                <span>Continue with Google</span>
               </button>
 
               {/* Facebook */}
               <button type="button" onClick={() => handleComingSoon('Facebook')}
-                className="flex w-full items-center justify-center gap-2 rounded-full border border-[#E6C7A8] bg-white py-3 text-sm font-black text-[#3D1F0D] transition hover:bg-[#FFF7ED]">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#FFF7ED] text-xs font-black text-[#1877F2]">f</span>
-                Continue with Facebook
+                className="flex w-full items-center justify-center gap-3 rounded-full border border-[#E6C7A8] bg-white/90 px-5 py-3 text-sm font-black text-[#3D1F0D] transition hover:-translate-y-0.5 hover:bg-[#FFF7ED] hover:shadow-md">
+                <img src="/images/icons/facebook.svg" alt="Facebook" className="h-5 w-5 object-contain" />
+                <span>Continue with Facebook</span>
               </button>
             </form>
 
