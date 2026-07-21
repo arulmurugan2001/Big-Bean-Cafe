@@ -24,6 +24,9 @@ const ensureTable = async () => {
     )
   `);
 
+  // Remove legacy contact row that was seeded before generic/contact split
+  await executeQuery("DELETE FROM page_heroes WHERE page_key = 'contact'");
+
   const rows = await executeQuery('SELECT COUNT(*) as cnt FROM page_heroes');
   if (rows[0].cnt === 0) {
     await executeQuery(
@@ -38,21 +41,6 @@ const ensureTable = async () => {
         'From one café dream to a growing coffee community across Bengaluru.',
         'Explore Our Menu', '/menu',
         'Visit Our Outlets', '/outlets',
-        0.45, 'active'
-      ]
-    );
-    await executeQuery(
-      `INSERT INTO page_heroes
-        (page_key, page_name, label, title, subtitle,
-         primary_button_text, primary_button_url,
-         secondary_button_text, secondary_button_url,
-         overlay_opacity, status)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
-      [
-        'contact', 'Contact', 'CONTACT BIG BEAN', 'Get in Touch',
-        'We are here to help you with orders, outlets, events, and franchise enquiries.',
-        'Find Outlets', '/outlets',
-        'Order Now', 'https://bigbeancafe.store',
         0.45, 'active'
       ]
     );
@@ -75,7 +63,7 @@ const getByPageKey = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     await ensureTable();
-    const rows = await executeQuery('SELECT * FROM page_heroes ORDER BY page_name ASC');
+    const rows = await executeQuery("SELECT * FROM page_heroes WHERE page_key != 'contact' ORDER BY page_name ASC");
     res.json({ success: true, data: rows });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -166,7 +154,8 @@ const updateByPageKey = async (req, res) => {
       );
     }
 
-    res.json({ success: true, message: 'Updated' });
+    const updated = await executeQuery('SELECT * FROM page_heroes WHERE page_key = ? LIMIT 1', [pageKey]);
+    res.json({ success: true, message: 'Page hero updated successfully', data: updated[0] });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

@@ -23,7 +23,8 @@ export default function PageHeroesList() {
       try {
         const res = await apiRequest('/admin/page-heroes', {})
         const data = await res.json()
-        setItems(data.data || [])
+        const filtered = (data.data || []).filter((item: PageHero) => item.page_key !== 'contact')
+        setItems(filtered)
       } catch {}
       setLoading(false)
     }
@@ -59,7 +60,7 @@ export default function PageHeroesList() {
             </thead>
             <tbody>
               {items.map(item => {
-                const img = getImageUrl(item.hero_image, null)
+                const img = item.hero_image ? getImageUrl(item.hero_image) : null
                 return (
                   <tr key={item.page_key} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-3">

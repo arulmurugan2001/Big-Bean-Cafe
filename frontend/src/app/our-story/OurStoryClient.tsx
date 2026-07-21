@@ -142,11 +142,19 @@ export default function OurStoryClient() {
   const [hero, setHero] = useState<PageHero>(DEFAULT_HERO)
   const [loading, setLoading] = useState(true)
 
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const updateMobile = () => setIsMobile(typeof window !== 'undefined' && window.innerWidth < 768)
+    updateMobile()
+    window.addEventListener('resize', updateMobile)
+    return () => window.removeEventListener('resize', updateMobile)
+  }, [])
+
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await apiFetch('/page-heroes/our-story')
-        const data = await res.json()
+        const data: any = await apiFetch('/page-heroes/our-story', { cache: 'no-store' })
         if (data.success && data.data) {
           setHero({ ...DEFAULT_HERO, ...data.data })
         }
@@ -156,7 +164,8 @@ export default function OurStoryClient() {
     load()
   }, [])
 
-  const heroImg = getImageUrl(hero.hero_image, '/images/highlights/coffee.jpg') || '/images/highlights/coffee.jpg'
+  const rawImage = isMobile && hero.mobile_hero_image ? hero.mobile_hero_image : hero.hero_image
+  const heroImg = getImageUrl(rawImage, '/images/highlights/coffee.jpg')
   const overlay = Number(hero.overlay_opacity ?? 0.45)
 
   const heroRef = useReveal()

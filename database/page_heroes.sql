@@ -18,7 +18,10 @@ CREATE TABLE IF NOT EXISTS page_heroes (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Default seeds (skipped if already exists because of unique page_key)
+-- Remove legacy contact row before re-seeding (generic page heroes should not include contact)
+DELETE FROM page_heroes WHERE page_key = 'contact';
+
+-- Default seed for generic page heroes
 INSERT IGNORE INTO page_heroes
   (page_key, page_name, label, title, subtitle,
    primary_button_text, primary_button_url,
@@ -29,9 +32,4 @@ VALUES
    'From one café dream to a growing coffee community across Bengaluru.',
    'Explore Our Menu', '/menu',
    'Visit Our Outlets', '/outlets',
-   0.45, 'active'),
-  ('contact', 'Contact', 'CONTACT BIG BEAN', 'Get in Touch',
-   'We are here to help you with orders, outlets, events, and franchise enquiries.',
-   'Find Outlets', '/outlets',
-   'Order Now', 'https://bigbeancafe.store',
    0.45, 'active');

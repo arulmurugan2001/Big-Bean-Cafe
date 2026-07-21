@@ -69,8 +69,8 @@ export default function EditPageHero() {
             overlay_opacity: d.overlay_opacity ?? 0.45,
             status: d.status || 'active',
           })
-          setHeroPreview(d.hero_image ? getImageUrl(d.hero_image, null) : null)
-          setMobilePreview(d.mobile_hero_image ? getImageUrl(d.mobile_hero_image, null) : null)
+          setHeroPreview(d.hero_image ? getImageUrl(d.hero_image) : null)
+          setMobilePreview(d.mobile_hero_image ? getImageUrl(d.mobile_hero_image) : null)
         }
       } catch {}
       setLoading(false)
@@ -108,9 +108,25 @@ export default function EditPageHero() {
       if (mobileFile) fd.append('mobile_hero_image', mobileFile)
       const res = await apiRequest(`/admin/page-heroes/${pageKey}`, { method: 'PUT', body: fd })
       const data = await res.json()
-      if (data.success) {
+      if (data.success && data.data) {
+        const d = data.data
+        setForm({
+          label: d.label || '',
+          title: d.title || '',
+          subtitle: d.subtitle || '',
+          primary_button_text: d.primary_button_text || '',
+          primary_button_url: d.primary_button_url || '',
+          secondary_button_text: d.secondary_button_text || '',
+          secondary_button_url: d.secondary_button_url || '',
+          overlay_opacity: d.overlay_opacity ?? 0.45,
+          status: d.status || 'active',
+        })
+        setHeroFile(null)
+        setMobileFile(null)
+        setHeroPreview(d.hero_image ? getImageUrl(d.hero_image) : null)
+        setMobilePreview(d.mobile_hero_image ? getImageUrl(d.mobile_hero_image) : null)
         toast.success('Saved successfully')
-        router.push('/admin/page-heroes')
+        setTimeout(() => router.push('/admin/page-heroes'), 800)
       } else {
         toast.error(data.message || 'Failed to save')
       }
