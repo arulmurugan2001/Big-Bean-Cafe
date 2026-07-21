@@ -1,7 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { ShoppingBag, Star, ArrowRight, ShoppingCart, Check } from 'lucide-react'
+import { useEffect, useState, type ElementType } from 'react'
+import Link from 'next/link'
+import {
+  ShoppingBag,
+  Star,
+  ArrowRight,
+  ShoppingCart,
+  Check,
+  Truck,
+  RotateCcw,
+  ShieldCheck,
+  BadgeCheck,
+} from 'lucide-react'
 import { addToCart } from '@/lib/cart'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
@@ -23,10 +34,34 @@ interface Product {
   category_name: string | null
 }
 
-const getImageUrl = (img: string | null) => {
+function getImageUrl(img: string | null) {
   if (!img) return null
-  if (img.startsWith('http')) return img
-  return `${API_BASE}/${img.replace(/^\/+/, '')}`
+  const trimmed = String(img).trim()
+  if (!trimmed) return null
+  if (/^https?:\/\//i.test(trimmed)) return trimmed
+  return `${API_BASE}/${trimmed.replace(/^\/+/, '')}`
+}
+
+function ProductImage({
+  src,
+  alt,
+  className = '',
+  placeholderClass = '',
+}: {
+  src: string | null
+  alt: string
+  className?: string
+  placeholderClass?: string
+}) {
+  const url = getImageUrl(src)
+  if (url) {
+    return <img src={url} alt={alt} className={className} loading="lazy" />
+  }
+  return (
+    <div className={placeholderClass}>
+      <ShoppingBag className="w-10 h-10 opacity-40" style={{ color: '#C9943A' }} />
+    </div>
+  )
 }
 
 export default function MerchandisePreview() {
@@ -56,76 +91,29 @@ export default function MerchandisePreview() {
   const remaining = products.slice(1)
 
   return (
-    <section style={{ background: '#FBF4EC', padding: '5rem 0' }}>
-      <div style={{ maxWidth: '1180px', margin: '0 auto', padding: '0 1.5rem' }}>
-        {/* Header */}
-        <div className="mb-8 flex flex-col items-start justify-between gap-5 md:flex-row md:items-end">
-          <div>
-            <p style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.24em', textTransform: 'uppercase', color: '#C9943A', marginBottom: '0.6rem' }}>
-              Big Bean Shop
-            </p>
-            <h2 className="font-heading" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, color: '#3D1F0D', lineHeight: 1.15, margin: 0 }}>
-              Bring the Big Bean Experience Home
-            </h2>
-            <p style={{ fontSize: '1rem', color: '#6B3520', marginTop: '0.7rem', maxWidth: 540, lineHeight: 1.75 }}>
-              Shop coffee powder, mugs, brewing tools and café merchandise crafted for coffee lovers.
-            </p>
-          </div>
+    <section className="relative overflow-hidden" style={{ background: '#FBF4EC' }}>
+      <style dangerouslySetInnerHTML={{ __html: FLOAT_CSS }} />
+      <DecorativeBackground />
 
-          <a
-            href="/merchandise"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', color: '#3D1F0D', border: '2px solid #3D1F0D', borderRadius: 100, padding: '0.85rem 2rem', fontSize: '0.85rem', fontWeight: 800, textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', transition: 'all 0.22s', whiteSpace: 'nowrap' }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#3D1F0D'; (e.currentTarget as HTMLElement).style.color = '#FFF7ED' }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#3D1F0D' }}
-          >
-            View All Merchandise <ArrowRight style={{ width: 15, height: 15 }} />
-          </a>
-        </div>
+      <div className="relative z-10 container-custom py-16 md:py-24">
+        <Header />
 
-        {/* Loading */}
         {loading ? (
-          <div className="grid gap-6 lg:grid-cols-[1.15fr_1fr]">
-            <div style={{ height: 520, borderRadius: 34, background: '#fff', border: '1px solid #E6C7A8', opacity: 0.45 }} />
-            <div className="space-y-5">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex gap-4" style={{ height: 150, borderRadius: 26, background: '#fff', border: '1px solid #E6C7A8', opacity: 0.45 }} />
-              ))}
-            </div>
-          </div>
+          <LoadingSkeleton />
         ) : products.length === 0 ? (
-          <div style={{ background: '#fff', borderRadius: 34, border: '1px solid #E6C7A8', padding: '4rem 2rem', textAlign: 'center', boxShadow: '0 12px 48px rgba(61,31,13,0.08)', maxWidth: 560, margin: '0 auto' }}>
-            <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'linear-gradient(135deg,#FFF7ED,#F6E6D1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-              <ShoppingBag style={{ width: 38, height: 38, color: '#C9943A' }} />
-            </div>
-            <h3 className="font-heading" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#3D1F0D', marginBottom: '0.6rem' }}>
-              Merchandise collection is brewing
-            </h3>
-            <p style={{ color: '#6B3520', fontSize: '1rem', lineHeight: 1.75, marginBottom: '1.8rem' }}>
-              New Big Bean Café merchandise will be available soon.
-            </p>
-            <a
-              href="/merchandise"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#3D1F0D', color: '#FFF7ED', borderRadius: 100, padding: '0.85rem 2rem', fontSize: '0.85rem', fontWeight: 800, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.08em', transition: 'background 0.2s' }}
-              onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.background = '#8B4A2F'}
-              onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.background = '#3D1F0D'}
-            >
-              Explore Merchandise <ArrowRight style={{ width: 14, height: 14 }} />
-            </a>
-          </div>
+          <EmptyState />
         ) : (
-          <div className="grid gap-6 lg:grid-cols-[1.15fr_1fr]">
-            {/* Featured Card */}
-            <FeaturedCard product={featured} isAdded={added === featured.id} onAdd={handleAddToCart} />
-
-            {/* Remaining Compact Cards */}
-            {remaining.length > 0 && (
+          <>
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.15fr_1fr]">
+              <FeaturedCard product={featured} isAdded={added === featured.id} onAdd={handleAddToCart} />
               <div className="flex flex-col gap-5">
                 {remaining.map((p) => (
                   <CompactCard key={p.id} product={p} isAdded={added === p.id} onAdd={handleAddToCart} />
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+            <BenefitsBar />
+          </>
         )}
       </div>
     </section>
@@ -133,189 +121,328 @@ export default function MerchandisePreview() {
 }
 
 function FeaturedCard({ product, isAdded, onAdd }: { product: Product; isAdded: boolean; onAdd: (p: Product) => void }) {
-  const imgUrl = getImageUrl(product.image)
   const discount = product.mrp && product.mrp > product.price ? Math.round((1 - product.price / product.mrp) * 100) : null
-  const category = product.category_name || product.category || 'Merchandise'
   const outOfStock = product.stock === 0
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        height: 520,
-        borderRadius: 34,
-        overflow: 'hidden',
-        boxShadow: '0 24px 70px rgba(61,31,13,0.16)',
-        border: '1px solid #E6C7A8',
-        background: '#fff',
-      }}
-    >
-      <a href={`/merchandise/${product.slug}`} style={{ display: 'block', position: 'relative', height: '100%', textDecoration: 'none' }}>
-        {/* Background image / fallback */}
-        <div style={{ position: 'absolute', inset: 0 }}>
-          {imgUrl ? (
-            <img
-              src={imgUrl}
-              alt={product.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          ) : (
-            <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#3D1F0D,#6B3520)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <ShoppingBag style={{ width: 80, height: 80, color: '#C9943A', opacity: 0.35 }} />
-            </div>
-          )}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(61,31,13,0.92) 0%, rgba(61,31,13,0.45) 45%, rgba(61,31,13,0.05) 70%)' }} />
-        </div>
+    <div className="group relative h-[440px] overflow-hidden rounded-[34px] border border-[#E6C7A8] bg-[#3D1F0D] shadow-[0_28px_80px_rgba(61,31,13,0.18)] transition md:h-[520px] lg:h-[560px]">
+      <div className="absolute inset-0">
+        <ProductImage
+          src={product.image}
+          alt={product.name}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          placeholderClass="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#3D1F0D] to-[#6B3520]"
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to top, rgba(26,13,7,0.95) 0%, rgba(61,31,13,0.55) 45%, rgba(61,31,13,0.05) 70%)' }}
+        />
+      </div>
 
-        {/* Badge / Discount */}
-        <div style={{ position: 'absolute', top: 22, left: 22, right: 22, display: 'flex', justifyContent: 'space-between', zIndex: 2 }}>
-          {product.badge_text ? (
-            <span style={{ background: '#C9943A', color: '#FFF7ED', borderRadius: 30, padding: '6px 14px', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              {product.badge_text}
-            </span>
-          ) : <span />}
-          {discount && (
-            <span style={{ background: '#A92517', color: '#FFF7ED', borderRadius: 30, padding: '6px 12px', fontSize: '0.7rem', fontWeight: 800 }}>
-              -{discount}%
-            </span>
-          )}
-        </div>
+      <div className="absolute top-5 left-5 right-5 z-10 flex justify-between">
+        <span className="rounded-full bg-[#C9943A] px-3.5 py-1.5 text-[0.65rem] font-extrabold uppercase tracking-wider text-[#FFF7ED]">
+          {product.badge_text || 'BEST SELLER'}
+        </span>
+        {discount && (
+          <span className="rounded-full bg-[#A92517] px-3 py-1.5 text-[0.65rem] font-extrabold text-[#FFF7ED]">
+            -{discount}%
+          </span>
+        )}
+      </div>
 
-        {/* Content */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '2.2rem', zIndex: 2, color: '#FFF7ED' }}>
-          <p style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#C9943A', marginBottom: '0.6rem' }}>
-            {category}
-          </p>
-          <h3 className="font-heading" style={{ fontSize: 'clamp(1.6rem, 2.8vw, 2.2rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: '0.75rem' }}>
+      <div className="absolute bottom-0 left-0 right-0 z-10 p-6 text-[#FFF7ED] md:p-8">
+        <Link href={`/merchandise/${product.slug}`}>
+          <h3 className="font-heading mb-2 text-[clamp(1.6rem,3vw,2.4rem)] font-bold leading-tight transition hover:text-[#C9943A]">
             {product.name}
           </h3>
+        </Link>
 
-          {product.description && (
-            <p style={{ fontSize: '0.9rem', color: '#E6C7A8', lineHeight: 1.7, marginBottom: '1rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-              {product.description}
-            </p>
+        {product.description && (
+          <p
+            className="mb-3 text-sm text-[#E6C7A8] md:text-base"
+            style={{ lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+          >
+            {product.description}
+          </p>
+        )}
+
+        <RatingStars rating={product.rating} size={16} dark />
+
+        <div className="mb-5 mt-3 flex items-center gap-3">
+          <span className="text-2xl font-black text-[#FFF7ED]">₹{Number(product.price).toFixed(0)}</span>
+          {product.mrp && Number(product.mrp) > Number(product.price) && (
+            <span className="text-sm text-[#C7A489] line-through">₹{Number(product.mrp).toFixed(0)}</span>
           )}
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '1rem' }}>
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} style={{ width: 14, height: 14, color: s <= Math.round(product.rating || 4.8) ? '#C9943A' : '#E6C7A8', fill: s <= Math.round(product.rating || 4.8) ? '#C9943A' : 'transparent' }} />
-            ))}
-            <span style={{ fontSize: '0.8rem', color: '#E6C7A8', marginLeft: '0.25rem' }}>{Number(product.rating || 4.8).toFixed(1)}</span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-            <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#FFF7ED' }}>₹{Number(product.price).toFixed(0)}</span>
-            {product.mrp && Number(product.mrp) > Number(product.price) && (
-              <span style={{ fontSize: '0.95rem', color: '#C7A489', textDecoration: 'line-through' }}>₹{Number(product.mrp).toFixed(0)}</span>
-            )}
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <button
-              type="button"
-              onClick={(e) => { e.preventDefault(); onAdd(product) }}
-              disabled={outOfStock}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.45rem',
-                background: isAdded ? '#22863a' : outOfStock ? '#9B6B50' : '#C9943A',
-                color: '#0E0704', borderRadius: 100, padding: '0.75rem 1.5rem', fontSize: '0.82rem', fontWeight: 800,
-                border: 'none', cursor: outOfStock ? 'not-allowed' : 'pointer', transition: 'background 0.2s',
-                textTransform: 'uppercase', letterSpacing: '0.06em'
-              }}
-              onMouseEnter={(e) => { if (!outOfStock && !isAdded) (e.currentTarget as HTMLElement).style.background = '#FFF7ED' }}
-              onMouseLeave={(e) => { if (!outOfStock && !isAdded) (e.currentTarget as HTMLElement).style.background = '#C9943A' }}
-            >
-              {outOfStock ? 'Out of Stock' : isAdded ? <><Check style={{ width: 14, height: 14 }} /> Added!</> : <><ShoppingCart style={{ width: 14, height: 14 }} /> Add to Cart</>}
-            </button>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#E6C7A8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              View Product
-            </span>
-          </div>
         </div>
-      </a>
+
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <button
+            type="button"
+            onClick={() => onAdd(product)}
+            disabled={outOfStock}
+            className="flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-wider transition sm:flex-none"
+            style={{
+              background: isAdded ? '#22863a' : outOfStock ? '#9B6B50' : '#C9943A',
+              color: isAdded ? '#fff' : '#0E0704',
+              cursor: outOfStock ? 'not-allowed' : 'pointer',
+            }}
+            onMouseEnter={(e) => { if (!outOfStock && !isAdded) (e.currentTarget as HTMLElement).style.background = '#FFF7ED' }}
+            onMouseLeave={(e) => { if (!outOfStock && !isAdded) (e.currentTarget as HTMLElement).style.background = '#C9943A' }}
+          >
+            {outOfStock ? 'Out of Stock' : isAdded ? <><Check className="h-4 w-4" /> Added!</> : <><ShoppingCart className="h-4 w-4" /> Add to Cart</>}
+          </button>
+          <Link
+            href={`/merchandise/${product.slug}`}
+            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-[#E6C7A8] px-6 py-3 text-xs font-extrabold uppercase tracking-wider text-[#E6C7A8] transition hover:bg-[#FFF7ED] hover:text-[#3D1F0D] sm:flex-none"
+          >
+            View Details
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
 
 function CompactCard({ product, isAdded, onAdd }: { product: Product; isAdded: boolean; onAdd: (p: Product) => void }) {
-  const imgUrl = getImageUrl(product.image)
   const discount = product.mrp && product.mrp > product.price ? Math.round((1 - product.price / product.mrp) * 100) : null
   const category = product.category_name || product.category || 'Merchandise'
   const outOfStock = product.stock === 0
 
   return (
-    <div
-      style={{
-        display: 'flex', flexDirection: 'column', gap: '1rem',
-        background: '#fff', borderRadius: 26, border: '1px solid #E6C7A8',
-        boxShadow: '0 14px 40px rgba(61,31,13,0.08)', overflow: 'hidden', transition: 'transform 0.25s ease, box-shadow 0.25s ease'
-      }}
-      className="sm:flex-row"
-      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 22px 55px rgba(61,31,13,0.14)' }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 14px 40px rgba(61,31,13,0.08)' }}
-    >
-      <a href={`/merchandise/${product.slug}`} style={{ display: 'block', position: 'relative', minWidth: 140, height: 150, overflow: 'hidden', textDecoration: 'none' }} className="sm:w-[140px]">
-        {imgUrl ? (
-          <img src={imgUrl} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        ) : (
-          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#FFF7ED,#F6E6D1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ShoppingBag style={{ width: 36, height: 36, color: '#C9943A', opacity: 0.5 }} />
-          </div>
-        )}
+    <div className="group flex flex-col overflow-hidden rounded-[26px] border border-[#E6C7A8] bg-white shadow-[0_14px_40px_rgba(61,31,13,0.08)] transition hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(61,31,13,0.14)] sm:flex-row">
+      <Link href={`/merchandise/${product.slug}`} className="relative block h-48 w-full overflow-hidden sm:h-auto sm:w-[150px] sm:min-w-[150px]">
+        <ProductImage
+          src={product.image}
+          alt={product.name}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          placeholderClass="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#FFF7ED] to-[#F6E6D1]"
+        />
         {product.badge_text && (
-          <span style={{ position: 'absolute', top: 10, left: 10, background: '#C9943A', color: '#FFF7ED', borderRadius: 20, padding: '3px 10px', fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          <span className="absolute top-3 left-3 rounded-full bg-[#C9943A] px-2.5 py-1 text-[0.6rem] font-extrabold uppercase tracking-wider text-[#FFF7ED]">
             {product.badge_text}
           </span>
         )}
         {discount && (
-          <span style={{ position: 'absolute', bottom: 10, left: 10, background: '#A92517', color: '#FFF7ED', borderRadius: 20, padding: '3px 10px', fontSize: '0.6rem', fontWeight: 800 }}>
+          <span className="absolute bottom-3 left-3 rounded-full bg-[#A92517] px-2.5 py-1 text-[0.6rem] font-extrabold text-[#FFF7ED]">
             -{discount}%
           </span>
         )}
-      </a>
+      </Link>
 
-      <div style={{ flex: 1, padding: '1.1rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <p style={{ fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#C9943A', marginBottom: '0.35rem' }}>
-          {category}
-        </p>
-        <a href={`/merchandise/${product.slug}`} style={{ textDecoration: 'none' }}>
-          <h3 className="font-heading" style={{ fontSize: '1.05rem', fontWeight: 800, color: '#3D1F0D', lineHeight: 1.3, marginBottom: '0.4rem' }}>
+      <div className="flex flex-1 flex-col justify-center p-5">
+        <p className="mb-1 text-[0.6rem] font-extrabold uppercase tracking-[0.14em] text-[#C9943A]">{category}</p>
+        <Link href={`/merchandise/${product.slug}`} className="group/link">
+          <h3 className="font-heading mb-1 text-lg font-bold leading-tight text-[#3D1F0D] transition group-hover/link:text-[#8B4A2F]">
             {product.name}
           </h3>
-        </a>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', marginBottom: '0.65rem' }}>
-          {[1, 2, 3, 4, 5].map((s) => (
-            <Star key={s} style={{ width: 11, height: 11, color: s <= Math.round(product.rating || 4.8) ? '#C9943A' : '#E6C7A8', fill: s <= Math.round(product.rating || 4.8) ? '#C9943A' : 'transparent' }} />
-          ))}
-          <span style={{ fontSize: '0.68rem', color: '#9B6B50', marginLeft: '0.15rem' }}>{Number(product.rating || 4.8).toFixed(1)}</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginTop: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#3D1F0D' }}>₹{Number(product.price).toFixed(0)}</span>
+        </Link>
+        <RatingStars rating={product.rating} size={12} />
+        {product.description && (
+          <p
+            className="mt-2 mb-3 text-sm text-[#6B3520]"
+            style={{ lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+          >
+            {product.description}
+          </p>
+        )}
+        <div className="mt-auto flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-black text-[#3D1F0D]">₹{Number(product.price).toFixed(0)}</span>
             {product.mrp && Number(product.mrp) > Number(product.price) && (
-              <span style={{ fontSize: '0.78rem', color: '#9B6B50', textDecoration: 'line-through' }}>₹{Number(product.mrp).toFixed(0)}</span>
+              <span className="text-xs text-[#9B6B50] line-through">₹{Number(product.mrp).toFixed(0)}</span>
             )}
           </div>
-
           <button
             type="button"
             onClick={() => onAdd(product)}
             disabled={outOfStock}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-[#FFF7ED] transition"
             style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-              background: isAdded ? '#22863a' : outOfStock ? '#C7A489' : '#3D1F0D', color: '#FFF7ED',
-              borderRadius: 100, padding: '0.55rem 0.95rem', fontSize: '0.72rem', fontWeight: 800,
-              border: 'none', cursor: outOfStock ? 'not-allowed' : 'pointer', transition: 'background 0.2s',
-              textTransform: 'uppercase', letterSpacing: '0.05em'
+              background: isAdded ? '#22863a' : outOfStock ? '#C7A489' : '#3D1F0D',
+              cursor: outOfStock ? 'not-allowed' : 'pointer',
             }}
             onMouseEnter={(e) => { if (!outOfStock && !isAdded) (e.currentTarget as HTMLElement).style.background = '#8B4A2F' }}
             onMouseLeave={(e) => { if (!outOfStock && !isAdded) (e.currentTarget as HTMLElement).style.background = '#3D1F0D' }}
+            aria-label={outOfStock ? 'Out of stock' : isAdded ? 'Added' : 'Add to cart'}
           >
-            {outOfStock ? 'Out' : isAdded ? <><Check style={{ width: 12, height: 12 }} /> Added!</> : <><ShoppingCart style={{ width: 12, height: 12 }} /> Add</>}
+            {outOfStock ? <ShoppingCart className="h-4 w-4 opacity-50" /> : isAdded ? <Check className="h-4 w-4" /> : <ShoppingCart className="h-4 w-4" />}
           </button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function RatingStars({ rating, size = 14, dark = false }: { rating: number | null; size?: number; dark?: boolean }) {
+  const value = Math.min(5, Math.max(0, Math.round(rating || 4.8)))
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <Star
+          key={s}
+          style={{ width: size, height: size }}
+          className={s <= value ? 'text-[#C9943A] fill-[#C9943A]' : dark ? 'text-[#C7A489]' : 'text-[#E6C7A8]'}
+        />
+      ))}
+      <span className={dark ? 'ml-1 text-xs text-[#E6C7A8]' : 'ml-1 text-xs text-[#9B6B50]'}>{Number(rating || 4.8).toFixed(1)}</span>
+    </div>
+  )
+}
+
+const FLOAT_CSS = `
+  @keyframes floatBean1 { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-20px) } }
+  @keyframes floatBean2 { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-14px) } }
+  @keyframes floatBean3 { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-24px) } }
+`
+
+const BEANS = [
+  { top: '8%', left: '5%', size: 28, rotate: 25, opacity: 0.14, color: '#C9943A', anim: 'floatBean1', duration: '8s', delay: '0s' },
+  { top: '18%', left: '92%', size: 22, rotate: -20, opacity: 0.12, color: '#8B5A3C', anim: 'floatBean2', duration: '9s', delay: '1s' },
+  { top: '55%', left: '3%', size: 18, rotate: 40, opacity: 0.1, color: '#C9943A', anim: 'floatBean3', duration: '7s', delay: '0.5s' },
+  { top: '70%', left: '93%', size: 26, rotate: -35, opacity: 0.13, color: '#6B3520', anim: 'floatBean1', duration: '10s', delay: '2s' },
+  { top: '40%', left: '10%', size: 16, rotate: 15, opacity: 0.09, color: '#8B5A3C', anim: 'floatBean2', duration: '8s', delay: '1.5s' },
+  { top: '85%', left: '22%', size: 20, rotate: -10, opacity: 0.11, color: '#C9943A', anim: 'floatBean3', duration: '9s', delay: '0.2s' },
+]
+
+function CoffeeBean({ size, color = '#C9943A', rotate = 0, opacity = 0.18 }: { size: number; color?: string; rotate?: number; opacity?: number }) {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size * 1.45,
+        background: color,
+        borderRadius: '50%',
+        opacity,
+        transform: `rotate(${rotate}deg)`,
+        position: 'relative',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: '10%',
+          bottom: '10%',
+          left: '50%',
+          width: 2,
+          background: 'rgba(61,31,13,0.35)',
+          borderRadius: 2,
+          transform: 'translateX(-50%)',
+        }}
+      />
+    </div>
+  )
+}
+
+function DecorativeBackground() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div
+        className="absolute -top-[10%] -left-[10%] h-[500px] w-[500px] rounded-full"
+        style={{ background: 'radial-gradient(circle, #F6E6D1 0%, transparent 70%)', opacity: 0.3 }}
+      />
+      <div
+        className="absolute -bottom-[10%] -right-[10%] h-[600px] w-[600px] rounded-full"
+        style={{ background: 'radial-gradient(circle, #FFF7ED 0%, transparent 70%)', opacity: 0.3 }}
+      />
+      <div
+        className="absolute top-1/2 left-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: 'radial-gradient(circle, #E6C7A8 0%, transparent 70%)', opacity: 0.2 }}
+      />
+      {BEANS.map((b, i) => (
+        <div
+          key={i}
+          className="absolute"
+          style={{
+            top: b.top,
+            left: b.left,
+            animation: `${b.anim} ${b.duration} ease-in-out infinite`,
+            animationDelay: b.delay,
+          }}
+        >
+          <CoffeeBean size={b.size} color={b.color} rotate={b.rotate} opacity={b.opacity} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function Header() {
+  return (
+    <div className="mb-12 text-center md:mb-16">
+      <p className="mb-3 text-[0.7rem] font-extrabold uppercase tracking-[0.25em] text-[#C9943A]">BIG BEAN CAFE</p>
+      <h2 className="font-heading mx-auto mb-4 max-w-3xl text-[clamp(1.8rem,4vw,3rem)] font-bold leading-tight text-[#3D1F0D]">
+        Bring the Big Bean Experience Home
+      </h2>
+      <p className="mx-auto mb-8 max-w-xl text-sm leading-relaxed text-[#6B3520] md:text-base">
+        Premium coffee essentials & merchandise, crafted for true coffee lovers.
+      </p>
+      <Link
+        href="/merchandise"
+        className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-[#FFF7ED] shadow-lg transition hover:shadow-xl"
+        style={{ background: 'linear-gradient(135deg, #3D1F0D 0%, #6B3520 100%)' }}
+      >
+        Explore All Merchandise <ArrowRight className="h-4 w-4" />
+      </Link>
+    </div>
+  )
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.15fr_1fr]">
+      <div className="h-[440px] animate-pulse rounded-[34px] bg-[#E6C7A8]/40 md:h-[520px]" />
+      <div className="flex flex-col gap-5">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-48 animate-pulse rounded-[26px] bg-[#E6C7A8]/40 sm:h-40" />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function EmptyState() {
+  return (
+    <div className="mx-auto max-w-xl rounded-[34px] border border-[#E6C7A8] bg-white p-10 text-center shadow-[0_12px_48px_rgba(61,31,13,0.08)]">
+      <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#FFF7ED] to-[#F6E6D1]">
+        <ShoppingBag className="h-9 w-9 text-[#C9943A]" />
+      </div>
+      <h3 className="font-heading mb-2 text-2xl font-extrabold text-[#3D1F0D]">Merchandise collection is brewing</h3>
+      <p className="mb-6 text-[#6B3520]">New Big Bean Café merchandise will be available soon.</p>
+      <Link
+        href="/merchandise"
+        className="inline-flex items-center gap-2 rounded-full bg-[#3D1F0D] px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#FFF7ED] transition hover:bg-[#8B4A2F]"
+      >
+        Explore Merchandise <ArrowRight className="h-4 w-4" />
+      </Link>
+    </div>
+  )
+}
+
+function BenefitsBar() {
+  const items = [
+    { icon: Truck, title: 'Free Shipping', desc: 'On orders above ₹999' },
+    { icon: RotateCcw, title: '30 Days Return', desc: 'Easy returns & exchanges' },
+    { icon: ShieldCheck, title: 'Secure Payment', desc: '100% secure checkout' },
+    { icon: BadgeCheck, title: 'Premium Quality', desc: 'Only the best for you' },
+  ]
+  return (
+    <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {items.map((item) => (
+        <BenefitItem key={item.title} icon={item.icon} title={item.title} desc={item.desc} />
+      ))}
+    </div>
+  )
+}
+
+function BenefitItem({ icon: Icon, title, desc }: { icon: ElementType; title: string; desc: string }) {
+  return (
+    <div className="flex items-center gap-4 rounded-2xl border border-[#E6C7A8] bg-white/70 p-4 shadow-sm backdrop-blur-sm">
+      <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#3D1F0D] to-[#6B3520] text-[#C9943A]">
+        <Icon className="h-5 w-5" />
+      </div>
+      <div>
+        <p className="text-sm font-bold text-[#3D1F0D]">{title}</p>
+        <p className="text-xs text-[#6B3520]">{desc}</p>
       </div>
     </div>
   )
