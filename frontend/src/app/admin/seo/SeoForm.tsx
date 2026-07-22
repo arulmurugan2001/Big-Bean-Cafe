@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, Eye, Info, AlertCircle, Plus, Trash2 } from 'lucide-react'
-import apiRequest from '@/utils/api'
+import { adminApiFetch } from '@/utils/api'
 
 interface SeoFormData {
   page_key: string
@@ -64,6 +64,27 @@ function parseFaq(json: string): FaqItem[] {
   catch { return [] }
 }
 
+function normalizeSeoForm(d?: (Partial<SeoFormData> & { id?: number }) | null): SeoFormData {
+  return {
+    page_key: d?.page_key ?? '',
+    page_name: d?.page_name ?? '',
+    page_path: d?.page_path ?? '',
+    meta_title: d?.meta_title ?? '',
+    meta_description: d?.meta_description ?? '',
+    meta_keywords: d?.meta_keywords ?? '',
+    canonical_url: d?.canonical_url ?? '',
+    og_title: d?.og_title ?? '',
+    og_description: d?.og_description ?? '',
+    twitter_title: d?.twitter_title ?? '',
+    twitter_description: d?.twitter_description ?? '',
+    robots_index: !!d?.robots_index,
+    robots_follow: !!d?.robots_follow,
+    schema_json: d?.schema_json ?? '',
+    faq_schema_json: d?.faq_schema_json ?? '',
+    status: d?.status ?? 'active',
+  }
+}
+
 interface Props {
   initialData?: Partial<SeoFormData> & { id?: number }
   mode: 'add' | 'edit'
@@ -71,7 +92,7 @@ interface Props {
 
 export default function SeoForm({ initialData, mode }: Props) {
   const router = useRouter()
-  const [form, setForm] = useState<SeoFormData>({ ...EMPTY, ...initialData })
+  const [form, setForm] = useState<SeoFormData>(() => normalizeSeoForm({ ...EMPTY, ...initialData }))
   const [faqs, setFaqs] = useState<FaqItem[]>(() => parseFaq((initialData as Record<string, string>)?.faq_schema_json || ''))
   const [ogImageFile, setOgImageFile]         = useState<File | null>(null)
   const [twitterImageFile, setTwitterImageFile] = useState<File | null>(null)
@@ -102,11 +123,10 @@ export default function SeoForm({ initialData, mode }: Props) {
       if (ogImageFile)      fd.append('og_image',      ogImageFile)
       if (twitterImageFile) fd.append('twitter_image', twitterImageFile)
 
-      const res = mode === 'add'
-        ? await apiRequest('/seo-pages', { method: 'POST', body: fd })
-        : await apiRequest(`/seo-pages/${initialData?.id}`, { method: 'PUT', body: fd })
+      const data = mode === 'add'
+        ? await adminApiFetch('/seo-pages', { method: 'POST', body: fd })
+        : await adminApiFetch(`/seo-pages/${initialData?.id}`, { method: 'PUT', body: fd })
 
-      const data = await res.json()
       if (!data.success) { setError(data.message || 'Failed to save'); return }
       router.push('/admin/seo')
     } catch { setError('Network error') }
@@ -159,15 +179,15 @@ export default function SeoForm({ initialData, mode }: Props) {
             <p className="mb-4 text-sm font-black uppercase tracking-wider text-[#9CB3AC]">Page Identity</p>
             <div className="grid gap-4 sm:grid-cols-3">
               <Field label="Page Key *" hint="Unique identifier e.g. about">
-                <input required value={form.page_key} onChange={e => set('page_key', e.target.value)}
+                <input required value={form.page_key ?? ''} onChange={e => set('page_key', e.target.value)}
                   className={inputCls} placeholder="about" />
               </Field>
               <Field label="Page Name *">
-                <input required value={form.page_name} onChange={e => set('page_name', e.target.value)}
+                <input required value={form.page_name ?? ''} onChange={e => set('page_name', e.target.value)}
                   className={inputCls} placeholder="About Us" />
               </Field>
               <Field label="Page Path *">
-                <input required value={form.page_path} onChange={e => set('page_path', e.target.value)}
+                <input required value={form.page_path ?? ''} onChange={e => set('page_path', e.target.value)}
                   className={inputCls} placeholder="/about" />
               </Field>
             </div>
@@ -178,25 +198,25 @@ export default function SeoForm({ initialData, mode }: Props) {
             <p className="mb-4 text-sm font-black uppercase tracking-wider text-[#9CB3AC]">Core SEO</p>
             <div className="space-y-4">
               <Field label="Meta Title">
-                <input value={form.meta_title} onChange={e => set('meta_title', e.target.value)}
+                <input value={form.meta_title ?? ''} onChange={e => set('meta_title', e.target.value)}
                   className={inputCls} placeholder="Big Bean Café | Best Café in Bengaluru" maxLength={120} />
                 <div className="mt-1 flex justify-between">
-                  <CharCounter value={form.meta_title} max={60} warn={65} />
+                  <CharCounter value={form.meta_title ?? ''} max={60} warn={65} />
                 </div>
               </Field>
               <Field label="Meta Description">
-                <textarea rows={3} value={form.meta_description} onChange={e => set('meta_description', e.target.value)}
+                <textarea rows={3} value={form.meta_description ?? ''} onChange={e => set('meta_description', e.target.value)}
                   className={textaCls} placeholder="Visit Big Bean Café for handcrafted coffee, fresh food and cozy café experiences..." maxLength={300} />
                 <div className="mt-1 flex justify-between">
-                  <CharCounter value={form.meta_description} max={160} warn={170} />
+                  <CharCounter value={form.meta_description ?? ''} max={160} warn={170} />
                 </div>
               </Field>
               <Field label="Meta Keywords" hint="Comma-separated. Optional.">
-                <input value={form.meta_keywords} onChange={e => set('meta_keywords', e.target.value)}
+                <input value={form.meta_keywords ?? ''} onChange={e => set('meta_keywords', e.target.value)}
                   className={inputCls} placeholder="coffee, café, Bengaluru, espresso" />
               </Field>
               <Field label="Canonical URL" hint="Leave blank to auto-generate.">
-                <input value={form.canonical_url} onChange={e => set('canonical_url', e.target.value)}
+                <input value={form.canonical_url ?? ''} onChange={e => set('canonical_url', e.target.value)}
                   className={inputCls} placeholder="https://www.bigbeancafe.in/about" />
               </Field>
             </div>
@@ -207,11 +227,11 @@ export default function SeoForm({ initialData, mode }: Props) {
             <p className="mb-4 text-sm font-black uppercase tracking-wider text-[#9CB3AC]">Open Graph (Facebook / WhatsApp)</p>
             <div className="space-y-4">
               <Field label="OG Title">
-                <input value={form.og_title} onChange={e => set('og_title', e.target.value)}
+                <input value={form.og_title ?? ''} onChange={e => set('og_title', e.target.value)}
                   className={inputCls} placeholder="Falls back to Meta Title if empty" />
               </Field>
               <Field label="OG Description">
-                <textarea rows={2} value={form.og_description} onChange={e => set('og_description', e.target.value)}
+                <textarea rows={2} value={form.og_description ?? ''} onChange={e => set('og_description', e.target.value)}
                   className={textaCls} placeholder="Falls back to Meta Description if empty" />
               </Field>
               <Field label="OG Image" hint="Recommended: 1200×630px">
@@ -226,11 +246,11 @@ export default function SeoForm({ initialData, mode }: Props) {
             <p className="mb-4 text-sm font-black uppercase tracking-wider text-[#9CB3AC]">Twitter Card</p>
             <div className="space-y-4">
               <Field label="Twitter Title">
-                <input value={form.twitter_title} onChange={e => set('twitter_title', e.target.value)}
+                <input value={form.twitter_title ?? ''} onChange={e => set('twitter_title', e.target.value)}
                   className={inputCls} placeholder="Falls back to OG Title" />
               </Field>
               <Field label="Twitter Description">
-                <textarea rows={2} value={form.twitter_description} onChange={e => set('twitter_description', e.target.value)}
+                <textarea rows={2} value={form.twitter_description ?? ''} onChange={e => set('twitter_description', e.target.value)}
                   className={textaCls} placeholder="Falls back to OG Description" />
               </Field>
               <Field label="Twitter Image" hint="Recommended: 1200×628px">
@@ -262,9 +282,9 @@ export default function SeoForm({ initialData, mode }: Props) {
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
-                  <input value={faq.question} onChange={e => setFaq(i, 'question', e.target.value)}
+                  <input value={faq.question ?? ''} onChange={e => setFaq(i, 'question', e.target.value)}
                     className={inputCls} placeholder="e.g. Where is Big Bean Café located?" />
-                  <textarea rows={2} value={faq.answer} onChange={e => setFaq(i, 'answer', e.target.value)}
+                  <textarea rows={2} value={faq.answer ?? ''} onChange={e => setFaq(i, 'answer', e.target.value)}
                     className={textaCls} placeholder="e.g. Big Bean Café has multiple outlets across Bengaluru." />
                 </div>
               ))}
@@ -288,11 +308,11 @@ export default function SeoForm({ initialData, mode }: Props) {
                 </label>
               </div>
               <Field label="Schema JSON" hint="Optional JSON-LD structured data.">
-                <textarea rows={4} value={form.schema_json} onChange={e => set('schema_json', e.target.value)}
+                <textarea rows={4} value={form.schema_json ?? ''} onChange={e => set('schema_json', e.target.value)}
                   className={textaCls + ' font-mono text-xs'} placeholder='{ "@context": "https://schema.org", ... }' />
               </Field>
               <Field label="Status">
-                <select value={form.status} onChange={e => set('status', e.target.value)} className={inputCls}>
+                <select value={form.status ?? 'active'} onChange={e => set('status', e.target.value)} className={inputCls}>
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>

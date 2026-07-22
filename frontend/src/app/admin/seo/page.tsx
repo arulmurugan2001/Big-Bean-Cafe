@@ -6,7 +6,7 @@ import {
   Search, Plus, Edit, Trash2, Globe, CheckCircle, XCircle,
   AlertTriangle, Info, Settings
 } from 'lucide-react'
-import apiRequest from '@/utils/api'
+import { adminApiFetch } from '@/utils/api'
 
 interface SeoPage {
   id: number
@@ -60,8 +60,7 @@ export default function AdminSeo() {
   const load = async () => {
     setLoading(true)
     try {
-      const res  = await apiRequest('/seo-pages')
-      const data = await res.json()
+      const data = await adminApiFetch('/seo-pages')
       setPages(data.success ? data.data : [])
     } catch { setPages([]) }
     setLoading(false)
@@ -71,8 +70,10 @@ export default function AdminSeo() {
 
   const handleDelete = async (id: number, name: string) => {
     if (!confirm(`Delete SEO for "${name}"?`)) return
-    await apiRequest(`/seo-pages/${id}`, { method: 'DELETE' })
-    load()
+    try {
+      await adminApiFetch(`/seo-pages/${id}`, { method: 'DELETE' })
+      load()
+    } catch { /* error handled by adminApiFetch */ }
   }
 
   const withScores = pages.map(p => ({ ...p, score: healthScore(p), tier: getTier(healthScore(p)) }))
