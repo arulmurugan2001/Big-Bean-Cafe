@@ -6,7 +6,8 @@ import Link from 'next/link'
 import {
   Calendar, Search, RefreshCw, Filter, X, Download, FileSpreadsheet,
   FileText, Eye, Check, Ticket, Trash2, AlertCircle, ChevronLeft,
-  ChevronRight, Phone, Mail, User, CreditCard, MapPin, Clock, CalendarDays
+  ChevronRight, Phone, Mail, User, CreditCard, MapPin, Clock, CalendarDays,
+  UserCheck, MessageCircle, Copy
 } from 'lucide-react'
 import apiRequest, { getApiUrl } from '@/lib/api'
 import { isSuperAdmin, hasPermission } from '@/lib/adminPermissions'
@@ -343,6 +344,69 @@ export default function AdminEventBookings() {
     a.remove()
   }
 
+  const formatPhone = (phone: string) => {
+    const d = (phone || '').replace(/\D/g, '')
+    if (d.length === 10) return `91${d}`
+    if (d.startsWith('91') && d.length >= 12) return d
+    return d
+  }
+
+  const buildRowMessage = (b: BookingRow) => {
+    const time = b.start_time ? `${fmtTime(b.start_time)}${b.end_time ? ` - ${fmtTime(b.end_time)}` : ''}` : '—'
+    return `Hi ${b.customer_name},
+
+Your Big Bean Café event booking update:
+
+Event: ${b.event_title}
+Booking ID: ${b.booking_number}
+Date: ${fmtDate(b.event_date)}
+Time: ${time}
+Venue: ${b.outlet_name || '—'}
+Tickets: ${b.quantity}
+Status: ${b.booking_status}
+Payment: ${b.payment_status}
+
+Please show this booking reference at the venue for check-in.
+
+Thank you,
+Big Bean Café`
+  }
+
+  const handleSendEmail = async (b: BookingRow) => {
+    if (!b.customer_email) {
+      toast.error('No email on file for this customer')
+      return
+    }
+    setActionLoading(b.id)
+    try {
+      const res = await apiRequest(`/admin/event-bookings/${b.id}/send-email`, {
+        method: 'POST',
+        body: JSON.stringify({ template_key: 'booking_confirmation' }),
+      })
+      const data = await res.json()
+      if (res.ok && data.success) toast.success(data.message || 'Email sent successfully')
+      else toast.error(data.message || 'Email update will be sent soon')
+    } catch {
+      toast.error('Email update will be sent soon')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleWhatsApp = (b: BookingRow) => {
+    const url = `https://wa.me/${formatPhone(b.customer_phone)}?text=${encodeURIComponent(buildRowMessage(b))}`
+    window.open(url, '_blank')
+  }
+
+  const handleCopyMessage = async (b: BookingRow) => {
+    try {
+      await navigator.clipboard.writeText(buildRowMessage(b))
+      toast.success('Booking update message copied')
+    } catch {
+      toast.error('Could not copy message')
+    }
+  }
+
   const downloadExport = async (type: 'excel' | 'pdf') => {
     if (!canExport) return
     const token = localStorage.getItem('admin_token') || localStorage.getItem('adminToken')
@@ -601,48 +665,57 @@ export default function AdminEventBookings() {
                         <span className="text-[#9CB3AC]">No</span>
                       )}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3">
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => openDetail(b.id)}
-                          title="View"
-                          className="rounded-lg p-2 text-[#5F6F68] hover:bg-[#F3F8F6]"
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Link
+                          href={`/admin/event-bookings/${b.id}`}
+                          title="View Details"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 text-blue-600 hover:bg-blue-100"
                         >
                           <Eye className="h-4 w-4" />
-                        </button>
+                        </Link>
+
                         {canEdit && !b.checked_in && b.booking_status !== 'cancelled' && (
                           <button
-                            onClick={() => handleCheckIn(b.id)}
+                            onClick={(e) => { e.stopPropagation(); handleCheckIn(b.id) }}
                             disabled={actionLoading === b.id}
                             title="Check In"
-                            className="inline-flex items-center gap-1 rounded-lg bg-[#167E68] px-2.5 py-1.5 text-xs font-bold text-white hover:bg-[#0F1F1A] disabled:opacity-50"
+                            className="inline-flex h-9 items-center justify-center gap-1 rounded-lg bg-[#0B8F6A] px-3 text-xs font-black text-white hover:bg-[#067554] disabled:opacity-50"
                           >
-                            <Check className="h-3.5 w-3.5" />
+                            <UserCheck className="h-4 w-4" />
                             {actionLoading === b.id ? 'Checking...' : 'Check In'}
                           </button>
                         )}
                         {b.checked_in && (
-                          <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-700">
-                            <Check className="h-3.5 w-3.5" /> Checked In
+                          <span className="inline-flex h-9 items-center gap-1 rounded-lg bg-emerald-50 px-3 text-xs font-black text-emerald-700">
+                            <Check className="h-4 w-4" /> Checked In
                           </span>
                         )}
+
                         <button
-                          onClick={() => downloadTicket(b.booking_number)}
-                          title="Download Ticket"
-                          className="rounded-lg p-2 text-[#C9943A] hover:bg-[#FFF3DE]"
+                          onClick={(e) => { e.stopPropagation(); handleSendEmail(b) }}
+                          disabled={actionLoading === b.id}
+                          title="Send Email Update"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-50"
                         >
-                          <Download className="h-4 w-4" />
+                          <Mail className="h-4 w-4" />
                         </button>
-                        {canEdit && b.booking_status !== 'cancelled' && (
-                          <button
-                            onClick={() => handleCancel(b.id)}
-                            disabled={actionLoading === b.id}
-                            title="Cancel"
-                            className="rounded-lg p-2 text-[#E85D4C] hover:bg-[#FDE8E8] disabled:opacity-50"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        )}
+
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleWhatsApp(b) }}
+                          title="Send WhatsApp"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-green-100 bg-green-50 text-green-600 hover:bg-green-100"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                        </button>
+
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleCopyMessage(b) }}
+                          title="Copy Message"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -839,6 +912,16 @@ export default function AdminEventBookings() {
                     <Download className="h-4 w-4" />
                     Download Ticket PDF
                   </button>
+                  {canEdit && detail.booking.booking_status !== 'cancelled' && (
+                    <button
+                      onClick={() => handleCancel(detail.booking.id)}
+                      disabled={actionLoading === detail.booking.id}
+                      className="inline-flex items-center gap-2 rounded-xl border border-[#F5C6C0] bg-[#FDE8E8] px-5 py-2.5 text-sm font-bold text-[#E85D4C] hover:bg-[#FBD5D0] disabled:opacity-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Cancel Booking
+                    </button>
+                  )}
                   <button
                     onClick={closeDetail}
                     className="inline-flex items-center gap-2 rounded-xl border border-[#DCE8E3] bg-white px-5 py-2.5 text-sm font-bold text-[#5F6F68] hover:bg-[#F3F8F6]"
