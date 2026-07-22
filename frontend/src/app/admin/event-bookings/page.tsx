@@ -616,11 +616,16 @@ Big Bean Café`
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="min-w-[1200px] w-full">
               <thead className="bg-[#F9FDFB]">
                 <tr>
                   {['Booking #', 'Event', 'Date & Time', 'Customer', 'Phone', 'Ticket', 'Qty', 'Amount', 'Payment', 'Booking', 'Check-in', 'Actions'].map(h => (
-                    <th key={h} className="whitespace-nowrap px-4 py-3 text-left text-xs font-black uppercase text-[#5F6F68]">{h}</th>
+                    <th
+                      key={h}
+                      className={`whitespace-nowrap px-4 py-3 text-xs font-black uppercase text-[#5F6F68] ${h === 'Actions' ? 'text-right min-w-[280px]' : 'text-left'}`}
+                    >
+                      {h}
+                    </th>
                   ))}
                 </tr>
               </thead>
@@ -665,12 +670,12 @@ Big Bean Café`
                         <span className="text-[#9CB3AC]">No</span>
                       )}
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap items-center gap-2">
+                    <td className="px-4 py-3 min-w-[280px]">
+                      <div className="flex items-center justify-end gap-2 whitespace-nowrap">
                         <Link
                           href={`/admin/event-bookings/${b.id}`}
                           title="View Details"
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 text-blue-600 hover:bg-blue-100"
+                          className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 text-blue-600 hover:bg-blue-100"
                         >
                           <Eye className="h-4 w-4" />
                         </Link>
@@ -680,14 +685,14 @@ Big Bean Café`
                             onClick={(e) => { e.stopPropagation(); handleCheckIn(b.id) }}
                             disabled={actionLoading === b.id}
                             title="Check In"
-                            className="inline-flex h-9 items-center justify-center gap-1 rounded-lg bg-[#0B8F6A] px-3 text-xs font-black text-white hover:bg-[#067554] disabled:opacity-50"
+                            className="inline-flex h-9 flex-shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-lg bg-[#0B8F6A] px-3 text-xs font-black text-white hover:bg-[#067554] disabled:opacity-50"
                           >
                             <UserCheck className="h-4 w-4" />
                             {actionLoading === b.id ? 'Checking...' : 'Check In'}
                           </button>
                         )}
                         {b.checked_in && (
-                          <span className="inline-flex h-9 items-center gap-1 rounded-lg bg-emerald-50 px-3 text-xs font-black text-emerald-700">
+                          <span className="inline-flex h-9 flex-shrink-0 items-center gap-1 whitespace-nowrap rounded-lg bg-emerald-50 px-3 text-xs font-black text-emerald-700">
                             <Check className="h-4 w-4" /> Checked In
                           </span>
                         )}
@@ -696,7 +701,7 @@ Big Bean Café`
                           onClick={(e) => { e.stopPropagation(); handleSendEmail(b) }}
                           disabled={actionLoading === b.id}
                           title="Send Email Update"
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-50"
+                          className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-50"
                         >
                           <Mail className="h-4 w-4" />
                         </button>
@@ -704,7 +709,7 @@ Big Bean Café`
                         <button
                           onClick={(e) => { e.stopPropagation(); handleWhatsApp(b) }}
                           title="Send WhatsApp"
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-green-100 bg-green-50 text-green-600 hover:bg-green-100"
+                          className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-green-100 bg-green-50 text-green-600 hover:bg-green-100"
                         >
                           <MessageCircle className="h-4 w-4" />
                         </button>
@@ -712,7 +717,7 @@ Big Bean Café`
                         <button
                           onClick={(e) => { e.stopPropagation(); handleCopyMessage(b) }}
                           title="Copy Message"
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100"
+                          className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100"
                         >
                           <Copy className="h-4 w-4" />
                         </button>
