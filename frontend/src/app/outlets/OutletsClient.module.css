@@ -1,0 +1,341 @@
+/* ─── Outlet Franchise CTA ──────────────────────────── */
+.franchiseSectionWrapper {
+  max-width: 1280px;
+  margin: 0 auto 4rem;
+  padding: 0 2rem;
+}
+
+.franchiseSection {
+  position: relative;
+  overflow: hidden;
+  border-radius: 42px;
+  background:
+    radial-gradient(circle at top left, rgba(201, 148, 58, 0.24), transparent 34%),
+    linear-gradient(135deg, #120905 0%, #2A120B 48%, #5C2E12 100%);
+  padding: 4rem;
+  box-shadow: 0 24px 72px rgba(18, 9, 5, 0.28);
+}
+
+.franchiseDots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(201, 148, 58, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.franchiseGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(201, 148, 58, 0.12), transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: glowPulse 5s ease-in-out infinite;
+}
+
+.franchiseBean {
+  position: absolute;
+  width: 36px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #8B5A3C, #2A120B);
+  opacity: 0.18;
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+.franchiseBean1 { top: 18%; right: 8%; animation: beanFloat 6s ease-in-out infinite; }
+.franchiseBean2 { bottom: 15%; left: 6%; animation: beanFloat 7s ease-in-out infinite reverse; }
+
+.franchiseSteam {
+  position: absolute;
+  top: 0;
+  left: 30%;
+  display: flex;
+  gap: 12px;
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.franchiseSteam span {
+  width: 2px;
+  height: 60px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 247, 237, 0.9), transparent);
+  filter: blur(1px);
+  animation: steamRise 4s ease-in-out infinite;
+}
+
+.franchiseSteam span:nth-child(2) { animation-delay: 0.8s; height: 80px; }
+.franchiseSteam span:nth-child(3) { animation-delay: 1.6s; height: 50px; }
+
+.franchiseGrid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  align-items: center;
+  gap: 3rem;
+}
+
+.franchiseLeft {
+  background: rgba(255, 247, 237, 0.08);
+  border: 1px solid rgba(255, 247, 237, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 32px;
+  padding: 2rem;
+}
+
+.franchiseBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(201, 148, 58, 0.14);
+  border: 1px solid rgba(201, 148, 58, 0.3);
+  border-radius: 999px;
+  padding: 0.4rem 1.1rem;
+  margin-bottom: 1.25rem;
+}
+
+.franchiseBadgeIcon {
+  color: #C9943A;
+  width: 14px;
+  height: 14px;
+}
+
+.franchiseBadgeText {
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #F3D59B;
+}
+
+.franchiseTitle {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #FFF7ED;
+  margin-bottom: 1rem;
+}
+
+.franchiseTitle span {
+  background: linear-gradient(to right, #F6D58D, #C9943A);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.franchiseSubtitle {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #E6C7A8;
+  margin-bottom: 1.75rem;
+}
+
+.franchiseBtnRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.franchiseBtnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #C9943A;
+  color: #120905;
+  border-radius: 999px;
+  padding: 0.9rem 2.2rem;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  box-shadow: 0 10px 28px rgba(201, 148, 58, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.franchiseBtnPrimary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.5s ease;
+}
+
+.franchiseBtnPrimary:hover::before { left: 100%; }
+.franchiseBtnPrimary:hover { background: #F6D58D; transform: translateY(-2px); }
+
+.franchiseBtnSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: #FFF7ED;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  padding: 0.9rem 2.2rem;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.franchiseBtnSecondary:hover {
+  background: #FFF7ED;
+  color: #3D1F0D;
+  transform: translateY(-2px);
+}
+
+.franchiseRight {
+  position: relative;
+}
+
+.franchiseRoadmap {
+  background: #FFF7ED;
+  border-radius: 34px;
+  padding: 1.6rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  animation: cardFloat 6s ease-in-out infinite;
+}
+
+.franchiseRoadmapTitle {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #3D1F0D;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.franchiseSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.franchiseStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid #E6C7A8;
+  border-radius: 22px;
+  padding: 1rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.franchiseStep:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.franchiseStepIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #3D1F0D;
+  color: #F6D58D;
+  flex-shrink: 0;
+}
+
+.franchiseStepIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.franchiseStepNumber {
+  font-size: 0.65rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #C9943A;
+  margin-bottom: 0.15rem;
+}
+
+.franchiseStepTitle {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #3D1F0D;
+  margin-bottom: 0.25rem;
+}
+
+.franchiseStepText {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #6B3520;
+}
+
+/* Animations */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes beanFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(4deg); }
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes steamRise {
+  0% { transform: translateY(10px) scaleY(0.8); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateY(-30px) scaleY(1.1); opacity: 0; }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .franchiseGrid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .franchiseSection { padding: 2.5rem; }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .franchiseSectionWrapper { padding: 0 1rem; }
+  .franchiseSection { border-radius: 28px; padding: 1.5rem; }
+  .franchiseLeft { padding: 1.5rem; text-align: center; }
+  .franchiseTitle { font-size: 1.875rem; }
+  .franchiseSubtitle { font-size: 0.95rem; }
+  .franchiseBtnRow { flex-direction: column; }
+  .franchiseBtnRow > * { width: 100%; justify-content: center; }
+  .franchiseRoadmap { border-radius: 24px; padding: 1.25rem; }
+  .franchiseBean,
+  .franchiseSteam { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .franchiseSectionWrapper *,
+  .franchiseSectionWrapper *::before,
+  .franchiseSectionWrapper *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

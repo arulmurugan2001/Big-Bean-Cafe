@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 import Link from 'next/link'
-import { MapPin, Phone, Clock, Navigation, Search, Store, ArrowRight, Coffee, X, ExternalLink } from 'lucide-react'
+import { MapPin, Phone, Clock, Navigation, Search, Store, ArrowRight, Coffee, X, ExternalLink, Sparkles, BadgeCheck, TrendingUp } from 'lucide-react'
+import s from './OutletsClient.module.css'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
 const API_BASE_URL = API_URL.replace('/api', '')
@@ -471,38 +472,71 @@ export default function Outlets() {
         )}
 
         {/* ── FRANCHISE CTA ────────────────────────────────────────── */}
-        <section style={{ maxWidth: 1280, margin: '0 auto 4rem', padding: '0 2rem' }}>
-          <div style={{ borderRadius: 40, background: 'linear-gradient(135deg,#120905 0%,#2A120B 50%,#5C2E12 100%)', overflow: 'hidden', padding: '4rem 3.5rem', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', boxShadow: '0 24px 72px rgba(18,9,5,0.28)' }}>
-            {/* Glow */}
-            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 300, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(201,148,58,0.08),transparent 70%)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle,rgba(201,148,58,0.05) 1px,transparent 1px)', backgroundSize: '32px 32px', pointerEvents: 'none' }} />
-
-            {/* Glass badge */}
-            <div style={{ position: 'relative', zIndex: 2, display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(201,148,58,0.14)', border: '1px solid rgba(201,148,58,0.3)', borderRadius: 100, padding: '0.4rem 1.1rem', marginBottom: '1.75rem' }}>
-              <Coffee style={{ width: 13, height: 13, color: '#C9943A' }} />
-              <span style={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: '0.22em', color: '#F3D59B', textTransform: 'uppercase' }}>Franchise Opportunity</span>
+        <section className={s.franchiseSectionWrapper}>
+          <div className={s.franchiseSection}>
+            <div className={s.franchiseDots} />
+            <div className={s.franchiseGlow} />
+            <span className={`${s.franchiseBean} ${s.franchiseBean1}`} />
+            <span className={`${s.franchiseBean} ${s.franchiseBean2}`} />
+            <div className={s.franchiseSteam}>
+              <span />
+              <span />
+              <span />
             </div>
 
-            <h2 className="font-heading" style={{ position: 'relative', zIndex: 2, fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 900, color: '#FFF7ED', lineHeight: 1.1, marginBottom: '1.1rem', maxWidth: 600 }}>
-              Want to Open a Big Bean Café?
-            </h2>
-            <p style={{ position: 'relative', zIndex: 2, fontSize: '1.05rem', color: '#C7A489', lineHeight: 1.8, maxWidth: 540, marginBottom: '2.25rem' }}>
-              Join our growing family of coffee entrepreneurs and bring the Big Bean Café experience to your city.
-            </p>
+            <div className={s.franchiseGrid}>
+              {/* Left */}
+              <div className={s.franchiseLeft}>
+                <div className={s.franchiseBadge}>
+                  <Sparkles className={s.franchiseBadgeIcon} />
+                  <span className={s.franchiseBadgeText}>Franchise Opportunity</span>
+                </div>
 
-            <div style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Link href="/franchise"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#C9943A', color: '#120905', borderRadius: 100, padding: '0.9rem 2.2rem', fontSize: '0.8rem', fontWeight: 900, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.09em', boxShadow: '0 10px 28px rgba(201,148,58,0.3)', transition: 'all 0.22s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#F6D58D'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#C9943A'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)' }}>
-                Explore Franchise <ArrowRight style={{ width: 14, height: 14 }} />
-              </Link>
-              <Link href="/contact"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', color: '#FFF7ED', border: '1.5px solid rgba(255,255,255,0.3)', borderRadius: 100, padding: '0.9rem 2.2rem', fontSize: '0.8rem', fontWeight: 900, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.09em', transition: 'all 0.22s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)' }}>
-                Contact Us
-              </Link>
+                <h2 className={`font-heading ${s.franchiseTitle}`}>
+                  Bring Big Bean Café to <span>Your City</span>
+                </h2>
+
+                <p className={s.franchiseSubtitle}>
+                  Partner with a growing café brand built on premium coffee, warm hospitality, and scalable outlet operations.
+                </p>
+
+                <div className={s.franchiseBtnRow}>
+                  <Link href="/franchise" className={s.franchiseBtnPrimary}>
+                    Explore Franchise <ArrowRight size={14} />
+                  </Link>
+                  <Link href="/contact" className={s.franchiseBtnSecondary}>
+                    Contact Us
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right */}
+              <div className={s.franchiseRight}>
+                <div className={s.franchiseRoadmap}>
+                  <h3 className={`font-heading ${s.franchiseRoadmapTitle}`}>Franchise Roadmap</h3>
+                  <div className={s.franchiseSteps}>
+                    {[
+                      { icon: Store, step: 'Step 1', title: 'Enquiry', text: 'Share your interest and city details with our franchise team.' },
+                      { icon: MapPin, step: 'Step 2', title: 'Setup & Training', text: 'We guide location selection, outlet build, and staff training.' },
+                      { icon: BadgeCheck, step: 'Step 3', title: 'Launch Café', text: 'Open your Big Bean Café with ongoing marketing and operations support.' },
+                    ].map((item) => {
+                      const Icon = item.icon
+                      return (
+                        <div key={item.title} className={s.franchiseStep}>
+                          <div className={s.franchiseStepIcon}>
+                            <Icon size={20} />
+                          </div>
+                          <div>
+                            <div className={s.franchiseStepNumber}>{item.step}</div>
+                            <h4 className={s.franchiseStepTitle}>{item.title}</h4>
+                            <p className={s.franchiseStepText}>{item.text}</p>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
