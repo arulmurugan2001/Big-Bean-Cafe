@@ -693,11 +693,19 @@ export default function AdminEventBookings() {
               </div>
             ) : (
               <>
-                <div className="mb-5 flex items-center justify-between">
+                <div className="mb-5 flex items-center justify-between gap-3">
                   <h2 className="text-xl font-black text-[#0F1F1A]">Booking Details</h2>
-                  <button onClick={closeDetail} className="rounded-lg p-2 text-[#5F6F68] hover:bg-[#F3F8F6]">
-                    <X className="h-5 w-5" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/admin/event-bookings/${detail.booking.id}`}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-[#167E68] px-3 py-1.5 text-xs font-bold text-[#167E68] hover:bg-[#EAF8F3]"
+                    >
+                      <Eye className="h-3.5 w-3.5" /> View Full Detail
+                    </Link>
+                    <button onClick={closeDetail} className="rounded-lg p-2 text-[#5F6F68] hover:bg-[#F3F8F6]">
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2">

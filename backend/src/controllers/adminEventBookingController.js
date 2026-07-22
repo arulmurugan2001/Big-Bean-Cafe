@@ -298,6 +298,7 @@ const getAdminBookingById = async (req, res) => {
           total_amount: Number(booking.total_amount),
           payment_status: booking.payment_status,
           booking_status: booking.booking_status,
+          razorpay_order_id: booking.razorpay_order_id || null,
           razorpay_payment_id: booking.razorpay_payment_id,
           qr_code: qrCodeDataUrl,
           notes: booking.notes,
