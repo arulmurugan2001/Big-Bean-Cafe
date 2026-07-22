@@ -76,7 +76,7 @@ export default function AppPromo() {
 
   return (
     <section
-      className="app-promo-section relative flex min-h-[auto] items-center overflow-hidden py-12 lg:min-h-[720px] lg:py-20"
+      className="app-promo-section relative flex min-h-[auto] items-center overflow-hidden py-8 lg:min-h-[580px] lg:py-10"
       style={bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : { background: 'linear-gradient(135deg,#FFF7ED,#F6E6D1)' }}
     >
       {/* Dark coffee overlay for readability */}
@@ -90,12 +90,12 @@ export default function AppPromo() {
       <div className="glow-circle pointer-events-none absolute -bottom-28 -left-24 h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(169,37,23,0.20)_0%,transparent_70%)] blur-3xl" />
 
       <div className="container-custom relative z-10 mx-auto w-full max-w-[1240px] px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
+        <div className="grid items-center gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:gap-8">
 
           {/* LEFT: glass content card */}
           <div className="order-1">
             <div
-              className="relative z-10 rounded-[28px] border p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:rounded-[34px] lg:p-10"
+              className="relative z-10 rounded-[28px] border p-5 shadow-2xl backdrop-blur-xl sm:p-6 lg:rounded-[34px] lg:p-7"
               style={{
                 background: 'linear-gradient(135deg, rgba(61,31,13,0.92), rgba(42,18,11,0.86))',
                 borderColor: 'rgba(255,247,237,0.18)',
@@ -113,7 +113,7 @@ export default function AppPromo() {
               <h2
                 className="fade-up font-heading font-black leading-[1.05] text-[#FFF7ED]"
                 style={{
-                  fontSize: 'clamp(1.75rem, 4vw, 4.2rem)',
+                  fontSize: 'clamp(1.8rem, 3.2vw, 3.2rem)',
                   textShadow: '0 4px 18px rgba(0,0,0,0.35)',
                 }}
               >
@@ -131,7 +131,7 @@ export default function AppPromo() {
               )}
 
               {/* Feature grid 2x2 */}
-              <div className="fade-up mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="fade-up mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {features.map((f, i) => (
                   <div
                     key={i}
@@ -146,7 +146,7 @@ export default function AppPromo() {
               </div>
 
               {/* CTA row */}
-              <div className="fade-up mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="fade-up mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
                   href={orderUrl}
                   target="_blank"
@@ -158,16 +158,16 @@ export default function AppPromo() {
                 </a>
 
                 {/* QR mini card */}
-                <div className="qr-card flex items-center gap-3 rounded-2xl border border-[#E6C7A8] bg-white/90 p-3 shadow-sm backdrop-blur-sm">
+                <div className="qr-card flex items-center gap-3 rounded-2xl border border-[#E6C7A8] bg-white/90 p-3.5 shadow-sm backdrop-blur-sm">
                   {qrUrl ? (
                     <img
                       src={qrUrl}
                       alt="Scan QR"
-                      className="h-[58px] w-[58px] flex-shrink-0 rounded-lg border border-[#E6C7A8] object-cover"
+                      className="h-[72px] w-[72px] flex-shrink-0 rounded-lg border border-[#E6C7A8] object-cover lg:h-[76px] lg:w-[76px]"
                     />
                   ) : (
-                    <div className="flex h-[58px] w-[58px] flex-shrink-0 items-center justify-center rounded-lg border border-[#E6C7A8] bg-[#FDF0E0]">
-                      <QrCode className="h-7 w-7 text-[#C9943A]" />
+                    <div className="flex h-[72px] w-[72px] flex-shrink-0 items-center justify-center rounded-lg border border-[#E6C7A8] bg-[#FDF0E0] lg:h-[76px] lg:w-[76px]">
+                      <QrCode className="h-9 w-9 text-[#C9943A]" />
                     </div>
                   )}
                   <div>
@@ -178,16 +178,16 @@ export default function AppPromo() {
               </div>
 
               {/* Store badges */}
-              <div className="fade-up mt-5 flex flex-wrap items-center justify-start gap-3 sm:justify-start">
+              <div className="fade-up mt-4 flex flex-wrap items-center justify-start gap-3 sm:justify-start">
                 <a href={gpUrl} target="_blank" rel="noopener noreferrer" aria-label="Get it on Google Play"
                   className="inline-flex items-center justify-center transition-transform duration-200 hover:-translate-y-0.5">
                   <Image src="/images/app/google-play-badge.png" alt="Get it on Google Play"
-                    width={150} height={46} className="store-badge h-auto w-[135px] object-contain sm:w-[150px]" />
+                    width={150} height={46} className="store-badge h-auto w-[130px] object-contain sm:w-[145px]" />
                 </a>
                 <a href={asUrl} target="_blank" rel="noopener noreferrer" aria-label="Download on the App Store"
                   className="inline-flex items-center justify-center transition-transform duration-200 hover:-translate-y-0.5">
                   <Image src="/images/app/app-store-badge.png" alt="Download on the App Store"
-                    width={150} height={46} className="store-badge h-auto w-[135px] object-contain sm:w-[150px]" />
+                    width={150} height={46} className="store-badge h-auto w-[130px] object-contain sm:w-[145px]" />
                 </a>
               </div>
 
@@ -207,21 +207,21 @@ export default function AppPromo() {
           {/* RIGHT: phone mockup */}
           <div className="relative order-2 flex items-center justify-center">
             <div
-              className="phone-card relative w-full max-w-[420px] rounded-[44px] border border-white/25 p-5 shadow-2xl sm:max-w-[460px] sm:p-7 lg:max-w-[500px] lg:p-9"
+              className="phone-card relative w-full max-w-[380px] rounded-[44px] border border-white/25 p-5 shadow-2xl sm:max-w-[400px] sm:p-5 lg:max-w-[440px] lg:p-6"
               style={{ background: 'linear-gradient(160deg,#3D1F0D,#8B4A2F,#C9943A)' }}
             >
               {/* Inner glow */}
               <div className="pointer-events-none absolute inset-0 rounded-[44px] bg-[radial-gradient(circle_at_35%_20%,rgba(255,247,237,0.20),transparent_55%)]" />
 
-              <div className="relative flex items-center justify-center rounded-[32px] bg-gradient-to-b from-white/10 to-transparent px-4 pb-6 pt-8 sm:px-6 sm:pb-8 sm:pt-10">
+              <div className="relative flex items-center justify-center rounded-[32px] bg-gradient-to-b from-white/10 to-transparent px-4 pb-5 pt-6 sm:px-6 sm:pb-6 sm:pt-8">
                 {mockupUrl ? (
                   <img
                     src={mockupUrl}
                     alt="Big Bean Café App"
-                    className="h-auto max-h-[330px] w-auto object-contain drop-shadow-2xl sm:max-h-[420px] lg:max-h-[520px]"
+                    className="h-auto max-h-[280px] w-auto object-contain drop-shadow-2xl sm:max-h-[360px] lg:max-h-[440px]"
                   />
                 ) : (
-                  <div className="flex h-[280px] w-[180px] flex-col items-center justify-center gap-4 rounded-[2rem] border border-white/10 bg-white/5 sm:h-[340px] sm:w-[220px]">
+                  <div className="flex h-[240px] w-[160px] flex-col items-center justify-center gap-4 rounded-[2rem] border border-white/10 bg-white/5 sm:h-[300px] sm:w-[200px]">
                     <Smartphone className="h-14 w-14 text-[#FFF7ED]/40" />
                     <span className="text-center text-xs font-bold uppercase tracking-widest text-[#FFF7ED]/50">
                       Big Bean Café App
