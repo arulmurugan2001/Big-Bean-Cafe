@@ -123,7 +123,21 @@ const createOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Online payment is not enabled.' });
     }
     if (!cfg.razorpay_key_id || !cfg.razorpay_key_secret || cfg.razorpay_key_secret === '********' || cfg.razorpay_key_secret.trim() === '') {
-      return res.status(400).json({ success: false, message: 'Razorpay keys are not configured properly.' });
+      return res.status(400).json({ success: false, message: 'Razorpay configuration missing' });
+    }
+
+    const keyId = String(cfg.razorpay_key_id).trim();
+    const isTestKey = keyId.startsWith('rzp_test_');
+    const isLiveKey = keyId.startsWith('rzp_live_');
+    if (!isTestKey && !isLiveKey) {
+      return res.status(400).json({ success: false, message: 'Razorpay Key ID is invalid. It must start with rzp_test_ or rzp_live_.' });
+    }
+    const configuredMode = String(cfg.payment_mode || '').toLowerCase();
+    if (configuredMode && ((configuredMode === 'test' && !isTestKey) || (configuredMode === 'live' && !isLiveKey))) {
+      return res.status(400).json({
+        success: false,
+        message: `Razorpay mode mismatch: payment_mode is ${configuredMode} but key_id does not match.`,
+      });
     }
 
     const { order_id, amount, currency } = req.body;
@@ -160,10 +174,14 @@ const createOrder = async (req, res) => {
         key_id: cfg.razorpay_key_id,
       },
     });
-  } catch (e) {
-    console.error('createOrder error:', e);
-    const msg = e?.error?.description || e?.message || 'Failed to create payment order.';
-    res.status(500).json({ success: false, message: msg });
+  } catch (error) {
+    console.error('Create payment order error:', error);
+    const msg = error?.error?.description || error?.message || 'Unable to create payment order';
+    res.status(400).json({
+      success: false,
+      message: 'Unable to create payment order',
+      error: process.env.NODE_ENV === 'development' ? msg : undefined,
+    });
   }
 };
 

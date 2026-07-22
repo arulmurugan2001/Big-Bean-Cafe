@@ -46,8 +46,9 @@ router.post('/', createOrder);
 // Update order status - requires merchandise_orders.edit
 router.put('/:id/status', verifyAdminToken, requirePermission('merchandise_orders', 'edit'), updateOrderStatus);
 
-// Mark payment as failed - requires merchandise_orders.edit
-router.put('/:id/payment-failed', verifyAdminToken, requirePermission('merchandise_orders', 'edit'), markPaymentFailed);
+// Mark payment as failed - public (called from checkout after payment failure, no auth required)
+router.put('/:id/payment-failed', markPaymentFailed);
+router.post('/:id/payment-failed', markPaymentFailed);
 
 // Send email notification - requires merchandise_orders.edit
 router.post('/:id/send-email', verifyAdminToken, requirePermission('merchandise_orders', 'edit'), sendEmailNotification);

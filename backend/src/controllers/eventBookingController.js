@@ -152,10 +152,19 @@ const createOrder = async (req, res) => {
 
     const { event_id, event_date_id, ticket_type_id, customer_name, customer_phone, customer_email, notes, quantity } = req.body;
 
-    if (!event_id || !event_date_id || !ticket_type_id || !customer_name || !customer_phone || !quantity) {
+    const missing = [];
+    if (!event_id) missing.push('event_id');
+    if (!event_date_id) missing.push('event_date_id');
+    if (!ticket_type_id) missing.push('ticket_type_id');
+    if (!customer_name || String(customer_name).trim() === '') missing.push('customer_name');
+    if (!customer_phone || String(customer_phone).trim() === '') missing.push('customer_phone');
+    if (quantity === undefined || quantity === null || quantity === '') missing.push('quantity');
+
+    if (missing.length) {
       return res.status(400).json({
         success: false,
-        message: 'Event, date, ticket, customer name, customer phone and quantity are required.',
+        message: 'Missing required fields',
+        missing,
       });
     }
 
@@ -305,9 +314,10 @@ const createOrder = async (req, res) => {
       sql: error.sql,
       stack: error.stack,
     });
-    res.status(500).json({
+    res.status(400).json({
       success: false,
-      message: error.message || 'Unable to create event booking order',
+      message: 'Unable to create event booking order',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
     });
   }
 };

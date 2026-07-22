@@ -298,7 +298,7 @@ export default function BookEventPage() {
       })
       const data = await res.json()
       if (!res.ok || !data.success) {
-        const message = data?.message || 'Unable to create booking. Please try again.'
+        const message = data?.message || 'Payment is currently unavailable. Please try again later.'
         toast.error(message)
         return
       }
@@ -356,7 +356,7 @@ export default function BookEventPage() {
               method: 'POST',
               body: JSON.stringify({ booking_id: data.data.booking_id, reason: 'Customer closed payment modal' }),
             }).catch(() => {})
-            toast.error('Payment was not completed. Please try again.')
+            toast.error('Payment failed. Your order was not completed.')
           },
         },
       }

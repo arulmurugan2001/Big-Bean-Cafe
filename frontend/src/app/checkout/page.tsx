@@ -566,7 +566,7 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: rzpData?.message || 'Razorpay order creation failed' })
       }).catch(() => {})
-      throw new Error(rzpData?.message || 'Unable to start Razorpay payment. Please try again or choose COD.')
+      throw new Error(rzpData?.message || 'Payment is currently unavailable. Please try again later.')
     }
 
     if (!rzpData.data?.razorpay_order_id || !rzpData.data?.key_id) {
