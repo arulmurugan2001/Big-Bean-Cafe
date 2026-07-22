@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const storeMenuController = require('../controllers/storeMenuController');
 
 const STORE_API_BASE = process.env.STORE_API_BASE || 'https://admin.bigbeancafe.store/api/v1';
 const STORE_BRANCH_ID = process.env.STORE_BRANCH_ID || '1';
@@ -18,6 +19,9 @@ function buildImageUrl(base, filename) {
   if (!filename || filename === 'def.png' || filename === '') return null;
   return `${base}/${filename}`;
 }
+
+// GET /api/store-menu
+router.get('/', storeMenuController.getStoreMenu);
 
 // GET /api/store-menu/categories
 router.get('/categories', async (req, res) => {

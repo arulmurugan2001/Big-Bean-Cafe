@@ -107,7 +107,10 @@ export default function FeaturedMenu() {
     async function load() {
       try {
         const json = await apiFetch('/store-menu')
-        if (!json?.success || !Array.isArray(json.data)) throw new Error('Invalid menu response')
+        if (!json?.success || !Array.isArray(json.data)) {
+          if (!cancelled) { setItems(FALLBACK_ITEMS); setLoading(false) }
+          return
+        }
 
         const all: FeaturedItem[] = []
         for (const category of json.data as any[]) {
@@ -180,11 +183,10 @@ export default function FeaturedMenu() {
         }
 
         if (!cancelled) {
-          setItems(picked.length > 0 ? picked.slice(0, 4) : FALLBACK_ITEMS.slice(0, 4))
+          setItems(picked.length > 0 ? picked.slice(0, 4) : FALLBACK_ITEMS)
           setLoading(false)
         }
-      } catch (err: any) {
-        console.error('Featured menu load error:', err.message)
+      } catch {
         if (!cancelled) {
           setItems(FALLBACK_ITEMS)
           setLoading(false)
