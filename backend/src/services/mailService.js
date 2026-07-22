@@ -150,6 +150,60 @@ const sendOrderEmail = async (order, status = 'received', toOverride = null) => 
   }
 };
 
+// Send a custom email using configured SMTP
+const sendCustomEmail = async ({ to, subject, html, module_name = 'general', record_id = null }) => {
+  try {
+    const cfg = await getSettings([
+      'smtp_enabled', 'smtp_host', 'smtp_port', 'smtp_secure',
+      'smtp_user', 'smtp_password', 'mail_from_name', 'mail_from_email',
+    ]);
+
+    if (!toBool(cfg.smtp_enabled)) {
+      await logEmail({ module_name, record_id, recipient_email: to || '', subject, status: 'failed', error_message: 'SMTP not enabled' });
+      return { success: false, reason: 'Email service is not configured' };
+    }
+    if (!cfg.smtp_host || !cfg.smtp_user || !cfg.smtp_password) {
+      await logEmail({ module_name, record_id, recipient_email: to || '', subject, status: 'failed', error_message: 'SMTP not configured' });
+      return { success: false, reason: 'Email service is not configured' };
+    }
+    if (!to) {
+      await logEmail({ module_name, record_id, recipient_email: '', subject, status: 'failed', error_message: 'No recipient email' });
+      return { success: false, reason: 'Customer email is missing' };
+    }
+
+    const nodemailer = require('nodemailer');
+    const port = parseInt(cfg.smtp_port) || 587;
+    const secure = toBool(cfg.smtp_secure);
+    const transporter = nodemailer.createTransport({
+      host: cfg.smtp_host,
+      port,
+      secure,
+      auth: { user: cfg.smtp_user, pass: cfg.smtp_password },
+    });
+
+    await transporter.sendMail({
+      from: `"${cfg.mail_from_name || 'Big Bean Café'}" <${cfg.mail_from_email || cfg.smtp_user}>`,
+      to,
+      subject,
+      html,
+    });
+
+    await logEmail({ module_name, record_id, recipient_email: to, subject, status: 'sent' });
+    return { success: true };
+  } catch (e) {
+    console.error('sendCustomEmail error:', e.message);
+    await logEmail({ module_name, record_id, recipient_email: to || '', subject, status: 'failed', error_message: e.message });
+    const msg = e.message || '';
+    if (msg.includes('Invalid login') || msg.includes('535') || msg.includes('auth')) {
+      return { success: false, reason: 'SMTP login failed. For Gmail, use an App Password.' };
+    }
+    if (msg.includes('ECONNREFUSED') || msg.includes('ETIMEDOUT') || msg.includes('ENOTFOUND')) {
+      return { success: false, reason: 'SMTP connection failed. Please check host and port.' };
+    }
+    return { success: false, reason: e.message };
+  }
+};
+
 // Send admin notification
 const sendAdminOrderNotification = async (order) => {
   try {
@@ -249,4 +303,4 @@ const sendEventTicketEmail = async (booking) => {
   }
 };
 
-module.exports = { sendOrderEmail, sendAdminOrderNotification, sendEventTicketEmail, getStatusMessage };
+module.exports = { sendOrderEmail, sendAdminOrderNotification, sendEventTicketEmail, sendCustomEmail, getStatusMessage };

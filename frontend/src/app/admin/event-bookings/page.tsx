@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import apiRequest, { getApiUrl } from '@/lib/api'
 import { isSuperAdmin, hasPermission } from '@/lib/adminPermissions'
+import toast from 'react-hot-toast'
 
 const API_URL = getApiUrl()
 
@@ -295,12 +296,17 @@ export default function AdminEventBookings() {
     try {
       const res = await apiRequest(`/admin/event-bookings/${id}/check-in`, { method: 'POST' })
       const data = await res.json()
-      if (!res.ok || !data.success) throw new Error(data.message || 'Failed')
-      alert(data.message)
-      load()
-      if (detail && detail.booking.id === id) openDetail(id)
+      if (!res.ok || !data.success) {
+        toast.error(data.message || 'Check-in failed')
+        return
+      }
+      toast.success(data.message || 'Checked in')
+      setBookings(prev => prev.map(b => b.id === id ? { ...b, checked_in: true, checked_in_at: new Date().toISOString() } : b))
+      if (detail && detail.booking.id === id) {
+        openDetail(id)
+      }
     } catch (err: any) {
-      alert(err.message || 'Check-in failed')
+      toast.error(err.message || 'Check-in failed')
     } finally {
       setActionLoading(null)
     }
@@ -604,15 +610,21 @@ export default function AdminEventBookings() {
                         >
                           <Eye className="h-4 w-4" />
                         </button>
-                        {canEdit && b.booking_status !== 'cancelled' && (
+                        {canEdit && !b.checked_in && b.booking_status !== 'cancelled' && (
                           <button
                             onClick={() => handleCheckIn(b.id)}
-                            disabled={actionLoading === b.id || b.booking_status === 'checked_in'}
-                            title="Mark Check-in"
-                            className="rounded-lg p-2 text-[#167E68] hover:bg-[#EAF8F3] disabled:opacity-50"
+                            disabled={actionLoading === b.id}
+                            title="Check In"
+                            className="inline-flex items-center gap-1 rounded-lg bg-[#167E68] px-2.5 py-1.5 text-xs font-bold text-white hover:bg-[#0F1F1A] disabled:opacity-50"
                           >
-                            <Check className="h-4 w-4" />
+                            <Check className="h-3.5 w-3.5" />
+                            {actionLoading === b.id ? 'Checking...' : 'Check In'}
                           </button>
+                        )}
+                        {b.checked_in && (
+                          <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-700">
+                            <Check className="h-3.5 w-3.5" /> Checked In
+                          </span>
                         )}
                         <button
                           onClick={() => downloadTicket(b.booking_number)}
@@ -797,15 +809,20 @@ export default function AdminEventBookings() {
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  {canEdit && detail.booking.booking_status !== 'checked_in' && detail.booking.booking_status !== 'cancelled' && (
+                  {canEdit && !detail.checkin && detail.booking.booking_status !== 'cancelled' && (
                     <button
                       onClick={() => handleCheckIn(detail.booking.id)}
                       disabled={actionLoading === detail.booking.id}
                       className="inline-flex items-center gap-2 rounded-xl bg-[#167E68] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#0F1F1A] disabled:opacity-50"
                     >
                       <Check className="h-4 w-4" />
-                      Mark Checked-in
+                      {actionLoading === detail.booking.id ? 'Checking In...' : 'Check In'}
                     </button>
+                  )}
+                  {detail.checkin && (
+                    <span className="inline-flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-2.5 text-sm font-bold text-emerald-700">
+                      <Check className="h-4 w-4" /> Checked In
+                    </span>
                   )}
                   <button
                     onClick={() => downloadTicket(detail.booking.booking_number)}

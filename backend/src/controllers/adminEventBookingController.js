@@ -138,7 +138,7 @@ const getSummary = async (params) => {
     SELECT
       COUNT(DISTINCT b.id) AS total,
       SUM(CASE WHEN b.booking_status = 'confirmed' THEN 1 ELSE 0 END) AS confirmed,
-      SUM(CASE WHEN b.booking_status = 'checked_in' THEN 1 ELSE 0 END) AS checked_in,
+      SUM(CASE WHEN c.checked_in_at IS NOT NULL THEN 1 ELSE 0 END) AS checked_in,
       SUM(CASE WHEN b.booking_status = 'pending' THEN 1 ELSE 0 END) AS pending,
       SUM(CASE WHEN b.booking_status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled,
       SUM(CASE WHEN b.payment_status = 'failed' THEN 1 ELSE 0 END) AS failed,
@@ -416,29 +416,51 @@ const checkInBooking = async (req, res) => {
 
     const booking = bookings[0];
 
-    if (booking.booking_status === 'checked_in') {
-      await connection.commit();
-      return res.json({ success: true, message: 'This ticket is already checked in.' });
-    }
-
-    if (booking.booking_status !== 'confirmed') {
-      await connection.rollback();
-      return res.status(400).json({ success: false, message: 'Booking must be confirmed to check in' });
-    }
-
-    if (booking.payment_status !== 'paid') {
-      await connection.rollback();
-      return res.status(400).json({ success: false, message: 'Payment must be completed to check in' });
-    }
-
     const [existingCheckins] = await connection.execute(
       'SELECT id FROM cafe_event_checkins WHERE booking_id = ?',
       [id]
     );
 
-    if (existingCheckins.length) {
+    if (existingCheckins.length || booking.booking_status === 'checked_in') {
+      const data = {
+        id: booking.id,
+        booking_number: booking.booking_number,
+        customer_name: booking.customer_name,
+        customer_phone: booking.customer_phone,
+        customer_email: booking.customer_email,
+        booking_status: booking.booking_status,
+        payment_status: booking.payment_status,
+        checked_in: true,
+      };
       await connection.commit();
-      return res.json({ success: true, message: 'This ticket is already checked in.' });
+      return res.json({ success: true, message: 'Customer already checked in', data });
+    }
+
+    const invalidBookingStatuses = ['cancelled'];
+    const invalidPaymentStatuses = ['failed', 'payment_failed'];
+    if (invalidBookingStatuses.includes(booking.booking_status) || invalidPaymentStatuses.includes(booking.payment_status)) {
+      await connection.rollback();
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot check in this booking because payment is not completed or booking is cancelled',
+      });
+    }
+
+    const allowedBookingStatuses = ['confirmed', 'paid', 'booked', 'completed'];
+    if (!allowedBookingStatuses.includes(booking.booking_status)) {
+      await connection.rollback();
+      return res.status(400).json({
+        success: false,
+        message: 'Booking must be confirmed, paid, booked, or completed to check in',
+      });
+    }
+
+    if (booking.payment_status !== 'paid') {
+      await connection.rollback();
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot check in this booking because payment is not completed or booking is cancelled',
+      });
     }
 
     await connection.execute(
@@ -446,17 +468,30 @@ const checkInBooking = async (req, res) => {
       [id, adminId || null, 'Checked in from admin']
     );
 
-    await connection.execute(
-      "UPDATE cafe_event_bookings SET booking_status = 'checked_in' WHERE id = ?",
-      [id]
-    );
-
     await connection.commit();
-    res.json({ success: true, message: 'Checked in successfully' });
+
+    const data = {
+      id: booking.id,
+      booking_number: booking.booking_number,
+      customer_name: booking.customer_name,
+      customer_phone: booking.customer_phone,
+      customer_email: booking.customer_email,
+      booking_status: booking.booking_status,
+      payment_status: booking.payment_status,
+      checked_in: true,
+    };
+
+    res.json({ success: true, message: 'Checked in successfully', data });
   } catch (error) {
     if (connection) await connection.rollback();
-    console.error('checkInBooking error:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Event check-in error:', error);
+    }
+    res.status(400).json({
+      success: false,
+      message: 'Unable to check in booking',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
   } finally {
     if (connection) connection.release();
   }

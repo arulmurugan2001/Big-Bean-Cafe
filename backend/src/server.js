@@ -112,6 +112,7 @@ app.use('/api/event-bookings', require('./routes/eventBookingRoutes'));
 app.use('/api/admin/events', require('./routes/adminEventRoutes'));
 app.use('/api/admin/event-bookings', require('./routes/adminEventBookingRoutes'));
 app.use('/api/admin/event-checkin', require('./routes/adminEventCheckinRoutes'));
+app.use('/api/admin', require('./routes/adminEventMessageRoutes'));
 app.use('/api/reservations', require('./routes/reservationRoutes'));
 app.use('/api/franchise', require('./routes/franchiseRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));

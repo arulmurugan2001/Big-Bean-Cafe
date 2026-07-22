@@ -81,6 +81,7 @@ const NAV = [
       { href: '/admin/events',                 icon: Calendar,   label: 'Events'               },
       { href: '/admin/event-bookings',         icon: Ticket,     label: 'Event Bookings'       },
       { href: '/admin/event-checkin',          icon: QrCode,     label: 'Event Check-in',       action: 'edit' },
+      { href: '/admin/event-message-templates',icon: Mail,       label: 'Event Messages'       },
       { href: '/admin/offers',                 icon: Tag,        label: 'Offers'               },
       { href: '/admin/menu',                   icon: Coffee,     label: 'Menu'                 },
       { href: '/admin/menu-combos',            icon: Coffee,     label: 'Menu Combos'          },

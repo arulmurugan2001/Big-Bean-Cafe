@@ -209,6 +209,7 @@ const ROUTE_MODULE_MAP: Record<string, string> = {
   '/admin/events':                     'events',
   '/admin/event-bookings':             'event_bookings',
   '/admin/event-checkin':              'event_bookings',
+  '/admin/event-message-templates':    'event_bookings',
   '/admin/instagram-media':            'instagram_media',
   '/admin/newsletter-subscribers':     'newsletter_subscribers',
   '/admin/app-promos':                 'app_promos',
