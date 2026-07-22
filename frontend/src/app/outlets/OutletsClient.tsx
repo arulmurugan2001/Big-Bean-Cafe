@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 import Link from 'next/link'
-import { MapPin, Phone, Clock, Navigation, Search, Store, ArrowRight, Coffee, X, ExternalLink, Sparkles, BadgeCheck, TrendingUp } from 'lucide-react'
+import { MapPin, Phone, Clock, Navigation, Search, Store, ArrowRight, Coffee, X, ExternalLink, Sparkles, BadgeCheck } from 'lucide-react'
 import s from './OutletsClient.module.css'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
@@ -472,71 +472,59 @@ export default function Outlets() {
         )}
 
         {/* ── FRANCHISE CTA ────────────────────────────────────────── */}
-        <section className={s.franchiseSectionWrapper}>
-          <div className={s.franchiseSection}>
-            <div className={s.franchiseDots} />
-            <div className={s.franchiseGlow} />
-            <span className={`${s.franchiseBean} ${s.franchiseBean1}`} />
-            <span className={`${s.franchiseBean} ${s.franchiseBean2}`} />
-            <div className={s.franchiseSteam}>
-              <span />
-              <span />
-              <span />
+        <section className={s.franchiseModernSection}>
+          <div className={s.franchiseBgDots} />
+          <div className={s.franchiseGlowOne} />
+          <div className={s.franchiseGlowTwo} />
+          <span className={s.franchiseBeanOne} />
+          <span className={s.franchiseBeanTwo} />
+
+          <div className={s.franchiseModernInner}>
+            <div className={s.franchiseModernBadge}>
+              <Sparkles size={14} />
+              <span>Franchise Opportunity</span>
             </div>
 
-            <div className={s.franchiseGrid}>
-              {/* Left */}
-              <div className={s.franchiseLeft}>
-                <div className={s.franchiseBadge}>
-                  <Sparkles className={s.franchiseBadgeIcon} />
-                  <span className={s.franchiseBadgeText}>Franchise Opportunity</span>
-                </div>
+            <h2 className={`font-heading ${s.franchiseModernTitle}`}>
+              Ready to launch your own <span>Big Bean Café?</span>
+            </h2>
 
-                <h2 className={`font-heading ${s.franchiseTitle}`}>
-                  Bring Big Bean Café to <span>Your City</span>
-                </h2>
+            <p className={s.franchiseModernSubtitle}>
+              Build a premium café business with proven products, training support, and scalable outlet operations.
+            </p>
 
-                <p className={s.franchiseSubtitle}>
-                  Partner with a growing café brand built on premium coffee, warm hospitality, and scalable outlet operations.
-                </p>
-
-                <div className={s.franchiseBtnRow}>
-                  <Link href="/franchise" className={s.franchiseBtnPrimary}>
-                    Explore Franchise <ArrowRight size={14} />
-                  </Link>
-                  <Link href="/contact" className={s.franchiseBtnSecondary}>
-                    Contact Us
-                  </Link>
-                </div>
+            <div className={s.franchiseOrbitArea}>
+              <div className={s.franchiseCenterIcon}>
+                <Store size={48} />
               </div>
+              <div className={s.franchiseConnectorLine} />
 
-              {/* Right */}
-              <div className={s.franchiseRight}>
-                <div className={s.franchiseRoadmap}>
-                  <h3 className={`font-heading ${s.franchiseRoadmapTitle}`}>Franchise Roadmap</h3>
-                  <div className={s.franchiseSteps}>
-                    {[
-                      { icon: Store, step: 'Step 1', title: 'Enquiry', text: 'Share your interest and city details with our franchise team.' },
-                      { icon: MapPin, step: 'Step 2', title: 'Setup & Training', text: 'We guide location selection, outlet build, and staff training.' },
-                      { icon: BadgeCheck, step: 'Step 3', title: 'Launch Café', text: 'Open your Big Bean Café with ongoing marketing and operations support.' },
-                    ].map((item) => {
-                      const Icon = item.icon
-                      return (
-                        <div key={item.title} className={s.franchiseStep}>
-                          <div className={s.franchiseStepIcon}>
-                            <Icon size={20} />
-                          </div>
-                          <div>
-                            <div className={s.franchiseStepNumber}>{item.step}</div>
-                            <h4 className={s.franchiseStepTitle}>{item.title}</h4>
-                            <p className={s.franchiseStepText}>{item.text}</p>
-                          </div>
-                        </div>
-                      )
-                    })}
+              {[
+                { icon: Store, step: 'Step 1', title: 'Enquiry', text: 'Share your interest and city details with our franchise team.' },
+                { icon: MapPin, step: 'Step 2', title: 'Setup & Training', text: 'We guide location selection, outlet build, and staff training.' },
+                { icon: BadgeCheck, step: 'Step 3', title: 'Launch Café', text: 'Open your Big Bean Café with ongoing marketing and operations support.' },
+              ].map((item) => {
+                const Icon = item.icon
+                return (
+                  <div key={item.title} className={s.franchiseCard}>
+                    <div className={s.cardIcon}>
+                      <Icon size={22} />
+                    </div>
+                    <div className={s.cardStep}>{item.step}</div>
+                    <h3 className={`font-heading ${s.cardTitle}`}>{item.title}</h3>
+                    <p className={s.cardText}>{item.text}</p>
                   </div>
-                </div>
-              </div>
+                )
+              })}
+            </div>
+
+            <div className={s.franchiseModernActions}>
+              <Link href="/franchise" className={s.franchiseBtnPrimary}>
+                Explore Franchise <ArrowRight size={14} />
+              </Link>
+              <Link href="/contact" className={s.franchiseBtnSecondary}>
+                Contact Us
+              </Link>
             </div>
           </div>
         </section>

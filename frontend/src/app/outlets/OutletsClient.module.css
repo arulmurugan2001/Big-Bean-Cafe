@@ -1,22 +1,19 @@
 /* ─── Outlet Franchise CTA ──────────────────────────── */
-.franchiseSectionWrapper {
-  max-width: 1280px;
-  margin: 0 auto 4rem;
-  padding: 0 2rem;
-}
-
-.franchiseSection {
+.franchiseModernSection {
   position: relative;
   overflow: hidden;
-  border-radius: 42px;
+  max-width: 1280px;
+  margin: 0 auto 4rem;
+  border-radius: 44px;
   background:
-    radial-gradient(circle at top left, rgba(201, 148, 58, 0.24), transparent 34%),
-    linear-gradient(135deg, #120905 0%, #2A120B 48%, #5C2E12 100%);
-  padding: 4rem;
-  box-shadow: 0 24px 72px rgba(18, 9, 5, 0.28);
+    radial-gradient(circle at 20% 20%, rgba(201, 148, 58, 0.25), transparent 32%),
+    radial-gradient(circle at 80% 80%, rgba(169, 37, 23, 0.22), transparent 36%),
+    linear-gradient(135deg, #120905 0%, #2A120B 45%, #5C2E12 100%);
+  box-shadow: 0 30px 90px rgba(18, 9, 5, 0.28);
+  padding: 4rem 3rem;
 }
 
-.franchiseDots {
+.franchiseBgDots {
   position: absolute;
   inset: 0;
   background-image: radial-gradient(circle, rgba(201, 148, 58, 0.06) 1px, transparent 1px);
@@ -24,20 +21,34 @@
   pointer-events: none;
 }
 
-.franchiseGlow {
+.franchiseGlowOne,
+.franchiseGlowTwo {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 600px;
-  height: 300px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(201, 148, 58, 0.12), transparent 70%);
-  transform: translate(-50%, -50%);
+  filter: blur(80px);
   pointer-events: none;
-  animation: glowPulse 5s ease-in-out infinite;
 }
 
-.franchiseBean {
+.franchiseGlowOne {
+  top: -80px;
+  left: -80px;
+  width: 360px;
+  height: 360px;
+  background: rgba(201, 148, 58, 0.20);
+  animation: glowPulse 6s ease-in-out infinite;
+}
+
+.franchiseGlowTwo {
+  bottom: -80px;
+  right: -80px;
+  width: 340px;
+  height: 340px;
+  background: rgba(169, 37, 23, 0.25);
+  animation: glowPulse 7s ease-in-out infinite reverse;
+}
+
+.franchiseBeanOne,
+.franchiseBeanTwo {
   position: absolute;
   width: 36px;
   height: 46px;
@@ -48,118 +59,208 @@
   pointer-events: none;
 }
 
-.franchiseBean1 { top: 18%; right: 8%; animation: beanFloat 6s ease-in-out infinite; }
-.franchiseBean2 { bottom: 15%; left: 6%; animation: beanFloat 7s ease-in-out infinite reverse; }
+.franchiseBeanOne { top: 16%; left: 8%; animation: beanFloat 6s ease-in-out infinite; }
+.franchiseBeanTwo { bottom: 18%; right: 8%; animation: beanFloat 7s ease-in-out infinite reverse; }
 
-.franchiseSteam {
-  position: absolute;
-  top: 0;
-  left: 30%;
-  display: flex;
-  gap: 12px;
-  opacity: 0.16;
-  pointer-events: none;
-}
-
-.franchiseSteam span {
-  width: 2px;
-  height: 60px;
-  border-radius: 2px;
-  background: linear-gradient(to bottom, transparent, rgba(255, 247, 237, 0.9), transparent);
-  filter: blur(1px);
-  animation: steamRise 4s ease-in-out infinite;
-}
-
-.franchiseSteam span:nth-child(2) { animation-delay: 0.8s; height: 80px; }
-.franchiseSteam span:nth-child(3) { animation-delay: 1.6s; height: 50px; }
-
-.franchiseGrid {
+.franchiseModernInner {
   position: relative;
   z-index: 2;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 3rem;
+  text-align: center;
 }
 
-.franchiseLeft {
-  background: rgba(255, 247, 237, 0.08);
-  border: 1px solid rgba(255, 247, 237, 0.14);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 32px;
-  padding: 2rem;
-}
-
-.franchiseBadge {
+.franchiseModernBadge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   background: rgba(201, 148, 58, 0.14);
   border: 1px solid rgba(201, 148, 58, 0.3);
   border-radius: 999px;
-  padding: 0.4rem 1.1rem;
+  padding: 0.45rem 1.1rem;
   margin-bottom: 1.25rem;
+  color: #F3D59B;
+  font-size: 0.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
 }
 
-.franchiseBadgeIcon {
+.franchiseModernBadge svg {
   color: #C9943A;
   width: 14px;
   height: 14px;
 }
 
-.franchiseBadgeText {
-  font-size: 0.6rem;
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #F3D59B;
-}
-
-.franchiseTitle {
+.franchiseModernTitle {
   font-size: clamp(2rem, 4vw, 3.4rem);
   font-weight: 900;
   line-height: 1.05;
   color: #FFF7ED;
   margin-bottom: 1rem;
+  max-width: 700px;
 }
 
-.franchiseTitle span {
+.franchiseModernTitle span {
   background: linear-gradient(to right, #F6D58D, #C9943A);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.franchiseSubtitle {
+.franchiseModernSubtitle {
   font-size: 1rem;
   line-height: 1.8;
   color: #E6C7A8;
-  margin-bottom: 1.75rem;
+  max-width: 560px;
+  margin-bottom: 2.5rem;
 }
 
-.franchiseBtnRow {
+.franchiseOrbitArea {
+  position: relative;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.franchiseCenterIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #F6D58D, #C9943A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 60px rgba(201, 148, 58, 0.35);
+  animation: iconPulse 4s ease-in-out infinite;
+  color: #120905;
+}
+
+.franchiseCenterIcon svg {
+  width: 48px;
+  height: 48px;
+}
+
+.franchiseConnectorLine {
+  position: absolute;
+  top: 50%;
+  left: 18%;
+  right: 18%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(201, 148, 58, 0.5), transparent);
+  z-index: 1;
+}
+
+.franchiseCard {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 220px;
+  max-width: 280px;
+  min-width: 220px;
+  text-align: left;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 247, 237, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 1.5rem;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: floatCard 5s ease-in-out infinite;
+}
+
+.franchiseCard:nth-child(3) { animation-delay: 0.5s; }
+.franchiseCard:nth-child(4) { animation-delay: 1s; }
+.franchiseCard:nth-child(5) { animation-delay: 1.5s; }
+
+.franchiseCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(201, 148, 58, 0.45);
+  box-shadow: 0 20px 55px rgba(201, 148, 58, 0.18);
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(201, 148, 58, 0.18);
+  color: #F6D58D;
+  margin-bottom: 1rem;
+}
+
+.cardIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cardStep {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #C9943A;
+  margin-bottom: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(201, 148, 58, 0.14);
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #FFF7ED;
+  margin-bottom: 0.5rem;
+}
+
+.cardText {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #C9A98C;
+}
+
+.franchiseModernActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
 }
 
-.franchiseBtnPrimary {
+.franchiseBtnPrimary,
+.franchiseBtnSecondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #C9943A;
-  color: #120905;
+  height: 52px;
+  padding: 0 2.2rem;
   border-radius: 999px;
-  padding: 0.9rem 2.2rem;
   font-size: 0.8rem;
   font-weight: 900;
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.09em;
-  box-shadow: 0 10px 28px rgba(201, 148, 58, 0.3);
+}
+
+.franchiseBtnPrimary {
   position: relative;
   overflow: hidden;
+  background: #C9943A;
+  color: #120905;
+  box-shadow: 0 10px 28px rgba(201, 148, 58, 0.3);
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
@@ -167,7 +268,7 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
+  left: -120%;
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
@@ -175,24 +276,13 @@
   transition: left 0.5s ease;
 }
 
-.franchiseBtnPrimary:hover::before { left: 100%; }
+.franchiseBtnPrimary:hover::before { left: 120%; }
 .franchiseBtnPrimary:hover { background: #F6D58D; transform: translateY(-2px); }
 
 .franchiseBtnSecondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
   background: transparent;
   color: #FFF7ED;
   border: 1.5px solid rgba(255, 255, 255, 0.28);
-  border-radius: 999px;
-  padding: 0.9rem 2.2rem;
-  font-size: 0.8rem;
-  font-weight: 900;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
@@ -202,93 +292,10 @@
   transform: translateY(-2px);
 }
 
-.franchiseRight {
-  position: relative;
-}
-
-.franchiseRoadmap {
-  background: #FFF7ED;
-  border-radius: 34px;
-  padding: 1.6rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-  animation: cardFloat 6s ease-in-out infinite;
-}
-
-.franchiseRoadmapTitle {
-  font-size: 1.1rem;
-  font-weight: 900;
-  color: #3D1F0D;
-  margin-bottom: 1.25rem;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.franchiseSteps {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-}
-
-.franchiseStep {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  background: #fff;
-  border: 1px solid #E6C7A8;
-  border-radius: 22px;
-  padding: 1rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.franchiseStep:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-}
-
-.franchiseStepIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: #3D1F0D;
-  color: #F6D58D;
-  flex-shrink: 0;
-}
-
-.franchiseStepIcon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.franchiseStepNumber {
-  font-size: 0.65rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #C9943A;
-  margin-bottom: 0.15rem;
-}
-
-.franchiseStepTitle {
-  font-size: 0.95rem;
-  font-weight: 900;
-  color: #3D1F0D;
-  margin-bottom: 0.25rem;
-}
-
-.franchiseStepText {
-  font-size: 0.8rem;
-  line-height: 1.55;
-  color: #6B3520;
-}
-
 /* Animations */
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.05); }
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.06); }
 }
 
 @keyframes beanFloat {
@@ -296,45 +303,42 @@
   50% { transform: translateY(-12px) rotate(4deg); }
 }
 
-@keyframes cardFloat {
+@keyframes iconPulse {
+  0%, 100% { box-shadow: 0 0 45px rgba(201, 148, 58, 0.28); transform: translate(-50%, -50%) scale(1); }
+  50% { box-shadow: 0 0 75px rgba(201, 148, 58, 0.45); transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes floatCard {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes steamRise {
-  0% { transform: translateY(10px) scaleY(0.8); opacity: 0; }
-  50% { opacity: 0.5; }
-  100% { transform: translateY(-30px) scaleY(1.1); opacity: 0; }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-  .franchiseGrid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+  50% { transform: translateY(-10px); }
 }
 
 /* Tablet */
 @media (max-width: 1024px) {
-  .franchiseSection { padding: 2.5rem; }
+  .franchiseModernSection { padding: 2.5rem 1.5rem; }
+  .franchiseCard { flex: 1 1 200px; min-width: 200px; }
 }
 
 /* Mobile */
-@media (max-width: 640px) {
-  .franchiseSectionWrapper { padding: 0 1rem; }
-  .franchiseSection { border-radius: 28px; padding: 1.5rem; }
-  .franchiseLeft { padding: 1.5rem; text-align: center; }
-  .franchiseTitle { font-size: 1.875rem; }
-  .franchiseSubtitle { font-size: 0.95rem; }
-  .franchiseBtnRow { flex-direction: column; }
-  .franchiseBtnRow > * { width: 100%; justify-content: center; }
-  .franchiseRoadmap { border-radius: 24px; padding: 1.25rem; }
-  .franchiseBean,
-  .franchiseSteam { display: none; }
+@media (max-width: 768px) {
+  .franchiseModernSection { padding: 2rem 1rem; border-radius: 28px; }
+  .franchiseModernTitle { font-size: 1.875rem; }
+  .franchiseModernSubtitle { font-size: 0.95rem; }
+  .franchiseOrbitArea { flex-direction: column; align-items: center; gap: 1rem; }
+  .franchiseCard { max-width: 100%; width: 100%; min-width: auto; text-align: center; }
+  .cardIcon { margin: 0 auto 1rem; }
+  .franchiseCenterIcon,
+  .franchiseConnectorLine,
+  .franchiseBeanOne,
+  .franchiseBeanTwo { display: none; }
+  .franchiseModernActions { flex-direction: column; width: 100%; }
+  .franchiseModernActions > * { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .franchiseSectionWrapper *,
-  .franchiseSectionWrapper *::before,
-  .franchiseSectionWrapper *::after {
+  .franchiseModernSection *,
+  .franchiseModernSection *::before,
+  .franchiseModernSection *::after {
     animation: none !important;
     transition: none !important;
   }
