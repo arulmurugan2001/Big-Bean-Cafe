@@ -332,24 +332,38 @@ export default function AppPage() {
         {/* ── Download CTA ── */}
         <section className={s.ctaSection}>
           <div className={s.ctaDots} />
-          <div className={s.ctaShimmer} />
-          <div className={s.ctaInner}>
+          <div className={s.ctaGlow} />
+          <span className={`${s.ctaBean} ${s.ctaBeanOne}`} />
+          <span className={`${s.ctaBean} ${s.ctaBeanTwo}`} />
+          <span className={`${s.ctaBean} ${s.ctaBeanThree}`} />
+
+          <div className={s.ctaCard}>
+            <div className={s.ctaSteam}>
+              <span />
+              <span />
+              <span />
+            </div>
+
+            <p className={s.ctaMiniBadge}>BIG BEAN CAFÉ APP</p>
+
             <h2 className={`font-heading ${s.ctaTitle}`}>
               Ready to order your Big Bean favourites?
             </h2>
+
             <p className={s.ctaSubtitle}>
               Download the app or order online now. Big Bean Café — your café, your way.
             </p>
+
             <div className={s.ctaBadges}>
               <a href={gpUrl} target="_blank" rel="noopener noreferrer"
                 aria-label="Get it on Google Play" className={s.ctaBadgeLink}>
                 <Image src="/images/app/google-play-badge.png" alt="Get it on Google Play"
-                  width={190} height={58} className="h-[58px] w-[190px] object-contain" />
+                  width={180} height={54} className="h-auto w-[150px] object-contain sm:h-[54px] sm:w-[180px]" />
               </a>
               <a href={asUrl} target="_blank" rel="noopener noreferrer"
                 aria-label="Download on the App Store" className={s.ctaBadgeLink}>
                 <Image src="/images/app/app-store-badge.png" alt="Download on the App Store"
-                  width={190} height={58} className="h-[58px] w-[190px] object-contain" />
+                  width={180} height={54} className="h-auto w-[150px] object-contain sm:h-[54px] sm:w-[180px]" />
               </a>
               <a href={orderUrl} target="_blank" rel="noopener noreferrer" className={s.ctaOrderBtn}>
                 {data.button_text || 'Order Online Now'} <ArrowRight size={15} />
