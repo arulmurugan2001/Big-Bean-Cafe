@@ -95,7 +95,11 @@ export default function AppPromo() {
           {/* LEFT: glass content card */}
           <div className="order-1">
             <div
-              className="relative z-10 rounded-[28px] border border-white/25 bg-[#FFF7ED]/88 p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:rounded-[34px] lg:p-10"
+              className="relative z-10 rounded-[28px] border p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:rounded-[34px] lg:p-10"
+              style={{
+                background: 'linear-gradient(135deg, rgba(61,31,13,0.92), rgba(42,18,11,0.86))',
+                borderColor: 'rgba(255,247,237,0.18)',
+              }}
             >
               {/* Eyebrow */}
               <div className="fade-up mb-4 inline-flex items-center gap-2 rounded-full border border-[#E6C7A8] bg-white/70 px-4 py-1.5 shadow-sm">
@@ -107,15 +111,21 @@ export default function AppPromo() {
 
               {/* Title */}
               <h2
-                className="fade-up font-heading font-black leading-[1.05] text-[#2A120B]"
-                style={{ fontSize: 'clamp(1.75rem, 4vw, 4.2rem)' }}
+                className="fade-up font-heading font-black leading-[1.05] text-[#FFF7ED]"
+                style={{
+                  fontSize: 'clamp(1.75rem, 4vw, 4.2rem)',
+                  textShadow: '0 4px 18px rgba(0,0,0,0.35)',
+                }}
               >
                 {data.title}
               </h2>
 
               {/* Subtitle */}
               {data.subtitle && (
-                <p className="fade-up mt-4 max-w-[540px] text-[15px] leading-relaxed text-[#6B3520] lg:text-[17px]">
+                <p
+                  className="fade-up mt-4 max-w-[540px] text-[15px] leading-relaxed text-[#F6E6D1] lg:text-[17px]"
+                  style={{ textShadow: '0 2px 10px rgba(0,0,0,0.25)' }}
+                >
                   {data.subtitle}
                 </p>
               )}
@@ -125,12 +135,12 @@ export default function AppPromo() {
                 {features.map((f, i) => (
                   <div
                     key={i}
-                    className="group flex items-center gap-3 rounded-2xl border border-[#E6C7A8] bg-white/80 p-3.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+                    className="group flex items-center gap-3 rounded-2xl border border-white/15 bg-white/10 p-3.5 shadow-sm backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15 hover:shadow-md"
                   >
-                    <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#A92517]/10">
-                      <Check className="h-3.5 w-3.5 text-[#A92517]" strokeWidth={3} />
+                    <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#C9943A]/20">
+                      <Check className="h-3.5 w-3.5 text-[#C9943A]" strokeWidth={3} />
                     </span>
-                    <span className="text-[13px] font-bold leading-snug text-[#3D1F0D] sm:text-sm">{f}</span>
+                    <span className="text-[13px] font-bold leading-snug text-[#FFF7ED] sm:text-sm">{f}</span>
                   </div>
                 ))}
               </div>
@@ -185,7 +195,7 @@ export default function AppPromo() {
               <div className="fade-up mt-4">
                 <a
                   href="/app"
-                  className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#A92517] transition-colors hover:text-[#8B2E1B]"
+                  className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F6E6D1] transition-colors hover:text-white"
                 >
                   Learn more about the app
                   <ArrowRight className="h-3.5 w-3.5" />
