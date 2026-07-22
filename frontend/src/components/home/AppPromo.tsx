@@ -2,15 +2,19 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { QrCode, ArrowRight, Check, Smartphone } from 'lucide-react'
+import { QrCode, ArrowRight, Check, Smartphone, Star, Zap, Gift } from 'lucide-react'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
 const API_BASE_URL = API_URL.replace('/api', '')
 
 const getImageUrl = (image?: string | null): string | null => {
   if (!image) return null
-  if (image.startsWith('http')) return image
-  return `${API_BASE_URL}/${image.replace(/^\/+/, '')}`
+  const img = String(image).trim()
+  if (!img) return null
+  if (img.startsWith('http://') || img.startsWith('https://')) return img
+  if (img.startsWith('/uploads')) return `${API_BASE_URL}${img}`
+  if (img.startsWith('uploads/')) return `${API_BASE_URL}/${img}`
+  return `${API_BASE_URL}/${img.replace(/^\/+/, '')}`
 }
 
 interface AppPromoData {
@@ -65,118 +69,255 @@ export default function AppPromo() {
   const features = [data.feature_1, data.feature_2, data.feature_3, data.feature_4].filter(Boolean) as string[]
   const qrUrl = getImageUrl(data.qr_image)
   const mockupUrl = getImageUrl(data.mockup_image)
+  const bgUrl = getImageUrl(data.background_image)
   const orderUrl = data.order_url || 'https://bigbeancafe.store'
   const gpUrl = data.google_play_url || '#'
   const asUrl = data.app_store_url || '#'
 
   return (
-    <section style={{ background: 'linear-gradient(135deg,#FFF7ED 0%,#FDF4E7 50%,#FBF0E0 100%)', padding: '5rem 0', position: 'relative', overflow: 'hidden' }}>
-      {/* decorative circles */}
-      <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '360px', height: '360px', borderRadius: '50%', background: 'radial-gradient(circle,rgba(201,148,58,0.10) 0%,transparent 70%)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '280px', height: '280px', borderRadius: '50%', background: 'radial-gradient(circle,rgba(169,37,23,0.06) 0%,transparent 70%)', pointerEvents: 'none' }} />
+    <section
+      className="relative overflow-hidden bg-[#FFF7ED] py-12 sm:py-14 lg:py-20"
+      style={bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+    >
+      {/* Cream overlay when background image exists */}
+      {bgUrl && <div className="absolute inset-0 bg-[#FFF7ED]/88" />}
 
-      <div className="container-custom" style={{ maxWidth: '1180px', margin: '0 auto', padding: '0 1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '3rem', flexWrap: 'wrap' }} className="lg:flex-nowrap">
+      {/* Soft brown radial glows */}
+      <div className="pointer-events-none absolute -right-20 -top-24 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(201,148,58,0.18)_0%,transparent_70%)] blur-2xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-20 h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(139,46,27,0.13)_0%,transparent_70%)] blur-2xl" />
 
-          {/* LEFT: text */}
-          <div style={{ flex: '1 1 420px', minWidth: 0 }}>
-            {/* eyebrow */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.8rem' }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#C9943A', flexShrink: 0, display: 'inline-block' }} />
-              <span style={{ fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.22em', color: '#8B5A3C' }}>
+      {/* Subtle dot pattern */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.045]"
+        style={{
+          backgroundImage: 'radial-gradient(circle,#3D1F0D 1.5px,transparent 1.5px)',
+          backgroundSize: '28px 28px',
+        }}
+      />
+
+      {/* Floating coffee bean circles */}
+      <div className="bean bean-1" />
+      <div className="bean bean-2" />
+      <div className="bean bean-3" />
+      <div className="bean bean-4" />
+
+      <div className="container-custom relative z-10 mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-10 lg:grid-cols-[1fr_0.9fr] lg:gap-14">
+
+          {/* LEFT: text & actions */}
+          <div className="order-2 lg:order-1">
+            {/* Eyebrow */}
+            <div className="fade-up mb-4 inline-flex items-center gap-2 rounded-full border border-[#C9943A]/30 bg-[#FFFFFF]/70 px-4 py-1.5 backdrop-blur-sm">
+              <Smartphone className="h-3.5 w-3.5 text-[#8B5A3C]" />
+              <span className="text-xs font-black uppercase tracking-wider text-[#8B5A3C]">
                 {data.eyebrow || 'BIG BEAN CAFÉ APP'}
               </span>
             </div>
 
-            {/* title */}
-            <h2 className="font-heading" style={{ fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 800, color: '#3D1F0D', lineHeight: 1.2, marginBottom: '1rem' }}>
+            {/* Title */}
+            <h2 className="fade-up font-heading text-[28px] font-black leading-[1.1] text-[#3D1F0D] sm:text-[34px] lg:text-[2.65rem]">
               {data.title}
             </h2>
 
-            {/* subtitle */}
+            {/* Subtitle */}
             {data.subtitle && (
-              <p style={{ fontSize: '1rem', color: '#6B3520', lineHeight: 1.7, marginBottom: '1.5rem', maxWidth: '460px' }}>
+              <p className="fade-up mt-4 max-w-[480px] text-[15px] leading-relaxed text-[#6B3520] sm:text-base">
                 {data.subtitle}
               </p>
             )}
 
-            {/* features + scan card side by side */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: '28px', alignItems: 'center', marginTop: '28px', marginBottom: '34px' }}
-              className="app-promo-feature-grid">
-              {/* features list */}
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', margin: 0, padding: 0, listStyle: 'none' }}>
-                {features.map((f, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-                    <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(169,37,23,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Check size={12} color="#A92517" strokeWidth={3} />
-                    </span>
-                    <span style={{ fontSize: '0.9rem', color: '#4A2518', fontWeight: 600 }}>{f}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* Feature grid 2x2 */}
+            <div className="fade-up mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {features.map((f, i) => (
+                <div
+                  key={i}
+                  className="group flex items-center gap-3 rounded-2xl border border-[#E9D5C2] bg-[#FFFFFF]/80 p-3.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+                >
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#A92517]/10">
+                    <Check className="h-3.5 w-3.5 text-[#A92517]" strokeWidth={3} />
+                  </span>
+                  <span className="text-[13px] font-bold text-[#4A2518] sm:text-sm">{f}</span>
+                </div>
+              ))}
+            </div>
 
-              {/* QR scan card */}
-              <div style={{ width: '220px', minHeight: '170px', background: '#FFFFFF', border: '1px solid rgba(201,148,58,0.30)', borderRadius: '24px', boxShadow: '0 18px 45px rgba(61,31,13,0.10)', padding: '18px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+            {/* CTA row */}
+            <div className="fade-up mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <a
+                href={orderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-button inline-flex h-12 flex-shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-[#8B2E1B] to-[#A92517] px-7 text-sm font-black uppercase tracking-wider text-white shadow-lg shadow-[#8B2E1B]/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#8B2E1B]/30"
+              >
+                {data.button_text || 'Order Online Now'}
+                <ArrowRight className="h-4 w-4" />
+              </a>
+
+              {/* QR mini card */}
+              <div className="qr-card flex items-center gap-3 rounded-2xl border border-[#C9943A]/25 bg-white/80 p-3 shadow-sm backdrop-blur-sm">
                 {qrUrl ? (
-                  <img src={qrUrl} alt="Scan QR" style={{ width: '86px', height: '86px', objectFit: 'cover', borderRadius: '12px', marginBottom: '12px' }} />
+                  <img
+                    src={qrUrl}
+                    alt="Scan QR"
+                    className="h-14 w-14 flex-shrink-0 rounded-lg border border-[#E9D5C2] object-cover"
+                  />
                 ) : (
-                  <div style={{ width: '86px', height: '86px', background: 'linear-gradient(135deg,#FDF0E0,#F5E6D0)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px', border: '1.5px solid rgba(201,148,58,0.30)' }}>
-                    <QrCode size={42} color="#C9943A" />
+                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-[#C9943A]/30 bg-[#FDF0E0]">
+                    <QrCode className="h-7 w-7 text-[#C9943A]" />
                   </div>
                 )}
-                <p style={{ fontSize: '14px', fontWeight: 900, color: '#3D1F0D', marginBottom: '6px', lineHeight: 1.3 }}>Scan to Order Online</p>
-                <p style={{ fontSize: '12px', color: '#8B5A3C', lineHeight: 1.5, margin: 0 }}>Quick access to menu, offers &amp; rewards</p>
+                <div>
+                  <p className="text-sm font-black text-[#3D1F0D]">Scan & Order</p>
+                  <p className="text-[11px] font-medium leading-tight text-[#8B5A3C]">Menu, offers & rewards</p>
+                </div>
               </div>
             </div>
 
-            {/* store badges */}
-            <div className="flex flex-wrap items-center gap-4" style={{ marginBottom: '1.2rem' }}>
+            {/* Store badges */}
+            <div className="fade-up mt-5 flex flex-wrap items-center gap-3">
               <a href={gpUrl} target="_blank" rel="noopener noreferrer" aria-label="Get it on Google Play"
-                className="inline-flex items-center justify-center transition-transform duration-200 hover:-translate-y-1">
+                className="inline-flex items-center justify-center transition-transform duration-200 hover:-translate-y-0.5">
                 <Image src="/images/app/google-play-badge.png" alt="Get it on Google Play"
-                  width={190} height={58} className="h-[58px] w-[190px] object-contain" />
+                  width={150} height={46} className="h-[46px] w-[150px] object-contain" />
               </a>
               <a href={asUrl} target="_blank" rel="noopener noreferrer" aria-label="Download on the App Store"
-                className="inline-flex items-center justify-center transition-transform duration-200 hover:-translate-y-1">
+                className="inline-flex items-center justify-center transition-transform duration-200 hover:-translate-y-0.5">
                 <Image src="/images/app/app-store-badge.png" alt="Download on the App Store"
-                  width={190} height={58} className="h-[58px] w-[190px] object-contain" />
+                  width={150} height={46} className="h-[46px] w-[150px] object-contain" />
               </a>
             </div>
 
-            {/* order CTA */}
-            <a href={orderUrl} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#A92517', color: '#FFF7ED', padding: '0.9rem 2rem', borderRadius: '999px', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.08em', boxShadow: '0 12px 28px rgba(139,46,27,0.28)', transition: 'background 0.2s, transform 0.18s' }}
-              onMouseOver={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#8B2E1B' }}
-              onMouseOut={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#A92517' }}>
-              {data.button_text || 'Order Online Now'}
-              <ArrowRight size={16} />
-            </a>
+            {/* Learn more */}
+            <div className="fade-up mt-5">
+              <a
+                href="/app"
+                className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#A92517] transition-colors hover:text-[#8B2E1B]"
+              >
+                Learn more about the app
+                <ArrowRight className="h-3.5 w-3.5" />
+              </a>
+            </div>
           </div>
 
-          {/* RIGHT: mockup */}
-          <div style={{ flex: '0 1 520px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {/* phone mockup */}
-            {mockupUrl ? (
-              <img src={mockupUrl} alt="App mockup"
-                className="h-auto w-full max-w-[520px] object-contain drop-shadow-2xl"
-                style={{ maxHeight: '520px' }} />
-            ) : (
-              <div style={{ width: '220px', height: '380px', background: 'linear-gradient(160deg,#3D1F0D,#8B5A3C)', borderRadius: '36px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.2rem', boxShadow: '0 32px 80px rgba(61,31,13,0.28)' }}>
-                <Smartphone size={72} color="rgba(255,247,237,0.7)" />
-                <span style={{ fontSize: '0.75rem', color: 'rgba(255,247,237,0.6)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'center', padding: '0 1.2rem' }}>Big Bean Café App</span>
+          {/* RIGHT: phone mockup */}
+          <div className="relative order-1 flex items-center justify-center lg:order-2">
+            <div className="mockup-float relative w-full max-w-[440px] rounded-[2.5rem] bg-gradient-to-br from-[#3D1F0D] to-[#8B5A3C] p-2 shadow-2xl shadow-[#3D1F0D]/25 lg:max-w-[520px]">
+              {/* Inner gold border / glow */}
+              <div className="absolute inset-0 rounded-[2.5rem] border border-[#C9943A]/30" />
+              <div className="pointer-events-none absolute inset-2 rounded-[2.2rem] bg-[radial-gradient(circle_at_30%_20%,rgba(201,148,58,0.25),transparent_50%)]" />
+
+              <div className="relative flex items-center justify-center rounded-[2.2rem] bg-gradient-to-b from-[#4A2518]/40 to-transparent px-6 pb-8 pt-10">
+                {mockupUrl ? (
+                  <img
+                    src={mockupUrl}
+                    alt="Big Bean Café App"
+                    className="h-auto max-h-[340px] w-auto object-contain drop-shadow-2xl sm:max-h-[440px] lg:max-h-[520px]"
+                  />
+                ) : (
+                  <div className="flex h-[300px] w-[200px] flex-col items-center justify-center gap-4 rounded-[2rem] border border-white/10 bg-white/5 sm:h-[380px] sm:w-[240px]">
+                    <Smartphone className="h-16 w-16 text-[#FFF7ED]/40" />
+                    <span className="text-center text-xs font-bold uppercase tracking-widest text-[#FFF7ED]/50">
+                      Big Bean Café App
+                    </span>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Floating badges - desktop */}
+              <div className="hidden lg:flex">
+                <div className="badge-float absolute -left-6 top-16 inline-flex items-center gap-2 rounded-full border border-[#C9943A]/30 bg-white/95 px-3 py-2 shadow-lg shadow-black/10 backdrop-blur-sm">
+                  <Star className="h-4 w-4 text-[#C9943A]" />
+                  <span className="text-xs font-black text-[#3D1F0D]">Big Coins</span>
+                </div>
+                <div className="badge-float-2 absolute -right-5 top-28 inline-flex items-center gap-2 rounded-full border border-[#C9943A]/30 bg-white/95 px-3 py-2 shadow-lg shadow-black/10 backdrop-blur-sm">
+                  <Zap className="h-4 w-4 text-[#A92517]" />
+                  <span className="text-xs font-black text-[#3D1F0D]">Fast Orders</span>
+                </div>
+                <div className="badge-float-3 absolute -left-4 bottom-20 inline-flex items-center gap-2 rounded-full border border-[#C9943A]/30 bg-white/95 px-3 py-2 shadow-lg shadow-black/10 backdrop-blur-sm">
+                  <Gift className="h-4 w-4 text-[#167E68]" />
+                  <span className="text-xs font-black text-[#3D1F0D]">QR Ordering</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-        </div>
-
-        {/* bottom link */}
-        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-          <a href="/app" style={{ fontSize: '0.82rem', fontWeight: 700, color: '#A92517', textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-            Learn more about the app <ArrowRight size={14} />
-          </a>
         </div>
       </div>
+
+      <style jsx>{`
+        .bean {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(1px);
+          opacity: 0.22;
+          pointer-events: none;
+          background: radial-gradient(circle at 30% 30%, #8B5A3C, #3D1F0D);
+        }
+        .bean-1 {
+          width: 80px;
+          height: 100px;
+          top: 12%;
+          left: 6%;
+          animation: floatBean 10s ease-in-out infinite;
+        }
+        .bean-2 {
+          width: 60px;
+          height: 78px;
+          top: 60%;
+          right: 8%;
+          animation: floatBean 12s ease-in-out infinite reverse;
+        }
+        .bean-3 {
+          width: 44px;
+          height: 58px;
+          bottom: 18%;
+          left: 22%;
+          animation: floatBean 9s ease-in-out infinite 1s;
+        }
+        .bean-4 {
+          width: 34px;
+          height: 44px;
+          top: 28%;
+          right: 26%;
+          animation: floatBean 11s ease-in-out infinite 0.5s;
+        }
+        @keyframes floatBean {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-14px) rotate(8deg); }
+        }
+        .mockup-float {
+          animation: mockupBob 5s ease-in-out infinite;
+        }
+        @keyframes mockupBob {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .badge-float {
+          animation: badgeBob 4s ease-in-out infinite;
+        }
+        .badge-float-2 {
+          animation: badgeBob 4.5s ease-in-out infinite 0.5s;
+        }
+        .badge-float-3 {
+          animation: badgeBob 5s ease-in-out infinite 1s;
+        }
+        @keyframes badgeBob {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+        .fade-up {
+          animation: fadeUp 0.7s ease-out both;
+        }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(18px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bean, .mockup-float, .badge-float, .badge-float-2, .badge-float-3, .fade-up {
+            animation: none;
+          }
+        }
+      `}</style>
     </section>
   )
 }
