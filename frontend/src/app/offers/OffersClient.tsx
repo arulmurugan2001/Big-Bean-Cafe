@@ -5,6 +5,7 @@ import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 import Link from 'next/link'
 import { Calendar, ArrowRight, Tag, Search, Coffee, Smartphone, UtensilsCrossed, Star, Gift, ChevronLeft, ChevronRight, MapPin, ExternalLink, Zap } from 'lucide-react'
+import s from './OffersClient.module.css'
 
 interface Offer {
   id: number
@@ -646,30 +647,30 @@ export default function Offers() {
         </section>
 
         {/* ── BIG COINS REWARDS ── */}
-        <section style={{ maxWidth: 1280, margin: '0 auto', padding: '4rem 2rem 0' }}>
-          <div style={{ borderRadius: 36, background: 'linear-gradient(135deg,#120905 0%,#3D1F0D 55%,#6B3520 100%)', overflow: 'hidden', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+        <section className={s.bigCoinsWrapper}>
+          <div className={s.bigCoinsSection}>
+            <div className={s.bigCoinsGlow} />
+
             {/* Left */}
-            <div style={{ padding: '3.5rem 3rem' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(201,148,58,0.14)', border: '1px solid rgba(201,148,58,0.28)', borderRadius: 100, padding: '0.4rem 1rem', marginBottom: '1.5rem' }}>
-                <Zap style={{ width: 13, height: 13, color: '#C9943A' }} />
-                <span style={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: '0.22em', color: '#F3D59B', textTransform: 'uppercase' }}>Loyalty Rewards</span>
+            <div className={s.bigCoinsLeft}>
+              <div className={s.bigCoinsBadge}>
+                <Zap size={13} />
+                <span>Loyalty Rewards</span>
               </div>
-              <h2 className="font-heading" style={{ fontSize: 'clamp(1.6rem,3vw,2.3rem)', fontWeight: 900, color: '#FFF7ED', lineHeight: 1.15, marginBottom: '1.1rem' }}>
+              <h2 className={`font-heading ${s.bigCoinsTitle}`}>
                 Earn More with<br />
-                <span style={{ background: 'linear-gradient(90deg,#F6D58D,#C9943A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Big Coins</span>
+                <span>Big Coins</span>
               </h2>
-              <p style={{ fontSize: '0.9rem', color: '#C7A489', lineHeight: 1.8, marginBottom: '2rem', maxWidth: 380 }}>
+              <p className={s.bigCoinsSubtitle}>
                 Order through the Big Bean Café app and earn Big Coins on eligible purchases. Redeem rewards and enjoy exclusive benefits.
               </p>
-              <Link href="/app"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#C9943A', color: '#120905', borderRadius: 100, padding: '0.75rem 1.6rem', fontSize: '0.76rem', fontWeight: 900, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.08em', transition: 'all 0.22s', boxShadow: '0 8px 24px rgba(201,148,58,0.3)' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#F6D58D' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#C9943A' }}>
-                <Smartphone style={{ width: 14, height: 14 }} /> Download App
+              <Link href="/app" className={s.bigCoinsButton}>
+                <Smartphone size={14} /> Download App
               </Link>
             </div>
+
             {/* Right cards */}
-            <div style={{ background: 'rgba(255,247,237,0.05)', borderLeft: '1px solid rgba(201,148,58,0.16)', padding: '3rem 2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1rem' }}>
+            <div className={s.bigCoinsRight}>
               {[
                 { icon: Gift, title: 'Earn coins on orders', desc: 'Get Big Coins on every eligible purchase through the app.' },
                 { icon: ArrowRight, title: 'Redeem on future purchases', desc: 'Use your accumulated Big Coins on your next order.' },
@@ -677,15 +678,13 @@ export default function Offers() {
               ].map((item, i) => {
                 const Icon = item.icon
                 return (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '1rem', borderRadius: 16, background: 'rgba(255,247,237,0.06)', border: '1px solid rgba(201,148,58,0.12)', transition: 'all 0.2s' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(201,148,58,0.1)' }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,247,237,0.06)' }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(201,148,58,0.2)', border: '1px solid rgba(201,148,58,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon style={{ width: 16, height: 16, color: '#C9943A' }} />
+                  <div key={i} className={s.bigCoinsRewardCard}>
+                    <div className={s.bigCoinsIconCircle}>
+                      <Icon size={16} />
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFF7ED', marginBottom: 3 }}>{item.title}</div>
-                      <div style={{ fontSize: '0.76rem', color: '#C7A489', lineHeight: 1.55 }}>{item.desc}</div>
+                      <div className={s.bigCoinsRewardTitle}>{item.title}</div>
+                      <div className={s.bigCoinsRewardDesc}>{item.desc}</div>
                     </div>
                   </div>
                 )
