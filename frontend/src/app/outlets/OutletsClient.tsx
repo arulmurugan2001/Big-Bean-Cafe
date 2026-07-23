@@ -93,9 +93,20 @@ export default function Outlets() {
           ? outletsJson.data
           : []
 
+        const getOutletPriority = (outlet: Outlet) => {
+          const name = (outlet.name || '').toLowerCase()
+          const slug = (outlet.slug || '').toLowerCase()
+          if (slug.includes('koramangala') || name.includes('koramangala')) return 0
+          return 1
+        }
+
         const active = list
           .filter((o) => o.status === 'active')
-          .sort((a, b) => a.sort_order - b.sort_order || b.id - a.id)
+          .sort((a, b) => {
+            const priorityDiff = getOutletPriority(a) - getOutletPriority(b)
+            if (priorityDiff !== 0) return priorityDiff
+            return a.sort_order - b.sort_order || b.id - a.id
+          })
 
         setOutlets(active)
       } catch (err) {
@@ -266,10 +277,10 @@ export default function Outlets() {
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
             <p style={{ fontSize: '0.65rem', fontWeight: 900, letterSpacing: '0.22em', color: '#C9943A', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Our Locations</p>
             <h2 className="font-heading" style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 900, color: '#3D1F0D', lineHeight: 1.1, marginBottom: '0.9rem' }}>
-              Visit Your Nearby Big Bean Café
+              Find a Big Bean Cafe Near You
             </h2>
             <p style={{ fontSize: '0.95rem', color: '#6B3520', maxWidth: 520, margin: '0 auto', lineHeight: 1.75 }}>
-              Choose your favourite Big Bean Café outlet and get directions instantly.
+              Visit your nearest Big Bean Cafe and enjoy the same quality, comfort and hospitality at every outlet.
             </p>
           </div>
 
