@@ -472,57 +472,66 @@ export default function Outlets() {
         )}
 
         {/* ── FRANCHISE CTA ────────────────────────────────────────── */}
-        <section className={s.franchiseModernSection}>
-          <div className={s.franchiseBgDots} />
-          <div className={s.franchiseGlowOne} />
-          <div className={s.franchiseGlowTwo} />
-          <span className={s.franchiseBeanOne} />
-          <span className={s.franchiseBeanTwo} />
+        <section className={s.franchiseCircleSection}>
+          <div className={s.franchiseCircleInner}>
+            <div className={s.franchiseCircleDots} />
+            <div className={s.franchiseCircleGlow} />
+            <span className={`${s.franchiseGoldDot} ${s.franchiseGoldDotOne}`} />
+            <span className={`${s.franchiseGoldDot} ${s.franchiseGoldDotTwo}`} />
+            <span className={`${s.franchiseGoldDot} ${s.franchiseGoldDotThree}`} />
+            <span className={`${s.franchiseGoldDot} ${s.franchiseGoldDotFour}`} />
 
-          <div className={s.franchiseModernInner}>
-            <div className={s.franchiseModernBadge}>
-              <Sparkles size={14} />
-              <span>Franchise Opportunity</span>
-            </div>
-
-            <h2 className={`font-heading ${s.franchiseModernTitle}`}>
-              Ready to launch your own <span>Big Bean Café?</span>
-            </h2>
-
-            <p className={s.franchiseModernSubtitle}>
-              Build a premium café business with proven products, training support, and scalable outlet operations.
-            </p>
-
-            <div className={s.franchiseOrbitArea}>
-              <div className={s.franchiseCenterIcon}>
-                <Store size={48} />
+            <div className={s.franchiseCircleContent}>
+              <div className={s.franchiseCircleBadge}>
+                <Sparkles size={14} />
+                <span>Franchise Opportunity</span>
               </div>
-              <div className={s.franchiseConnectorLine} />
 
-              {[
-                { icon: Store, step: 'Step 1', title: 'Enquiry', text: 'Share your interest and city details with our franchise team.' },
-                { icon: MapPin, step: 'Step 2', title: 'Setup & Training', text: 'We guide location selection, outlet build, and staff training.' },
-                { icon: BadgeCheck, step: 'Step 3', title: 'Launch Café', text: 'Open your Big Bean Café with ongoing marketing and operations support.' },
-              ].map((item) => {
-                const Icon = item.icon
-                return (
-                  <div key={item.title} className={s.franchiseCard}>
-                    <div className={s.cardIcon}>
-                      <Icon size={22} />
-                    </div>
-                    <div className={s.cardStep}>{item.step}</div>
-                    <h3 className={`font-heading ${s.cardTitle}`}>{item.title}</h3>
-                    <p className={s.cardText}>{item.text}</p>
-                  </div>
-                )
-              })}
+              <h2 className={`font-heading ${s.franchiseCircleTitle}`}>
+                Open Your Own <span>Big Bean Café</span>
+              </h2>
+
+              <p className={s.franchiseCircleSubtitle}>
+                Partner with a growing café brand with proven products, training support, and scalable outlet operations.
+              </p>
             </div>
 
-            <div className={s.franchiseModernActions}>
-              <Link href="/franchise" className={s.franchiseBtnPrimary}>
+            <div className={s.franchiseOrbit}>
+              <div className={s.franchiseCenterCircle}>
+                <Coffee size={40} />
+              </div>
+              <div className={s.franchiseArcLine} />
+
+              <div className={`${s.franchiseOrbitCard} ${s.franchiseOrbitCardOne}`}>
+                <div className={s.orbitCardIcon}>
+                  <Store size={20} />
+                </div>
+                <h3 className={`font-heading ${s.orbitCardTitle}`}>Enquiry</h3>
+                <p className={s.orbitCardText}>Share your interest and preferred city.</p>
+              </div>
+
+              <div className={`${s.franchiseOrbitCard} ${s.franchiseOrbitCardTwo}`}>
+                <div className={s.orbitCardIcon}>
+                  <MapPin size={20} />
+                </div>
+                <h3 className={`font-heading ${s.orbitCardTitle}`}>Setup</h3>
+                <p className={s.orbitCardText}>Location, training, SOP and launch support.</p>
+              </div>
+
+              <div className={`${s.franchiseOrbitCard} ${s.franchiseOrbitCardThree}`}>
+                <div className={s.orbitCardIcon}>
+                  <BadgeCheck size={20} />
+                </div>
+                <h3 className={`font-heading ${s.orbitCardTitle}`}>Launch</h3>
+                <p className={s.orbitCardText}>Start your café with Big Bean brand support.</p>
+              </div>
+            </div>
+
+            <div className={s.franchiseCircleActions}>
+              <Link href="/franchise" className={s.franchiseCirclePrimary}>
                 Explore Franchise <ArrowRight size={14} />
               </Link>
-              <Link href="/contact" className={s.franchiseBtnSecondary}>
+              <Link href="/contact" className={s.franchiseCircleSecondary}>
                 Contact Us
               </Link>
             </div>
