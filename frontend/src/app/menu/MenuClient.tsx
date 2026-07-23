@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
-import { Coffee, Search, Leaf, ShoppingBag, AlertCircle, SlidersHorizontal, X, ArrowRight, ChevronDown } from 'lucide-react'
+import { Coffee, Search, Leaf, ShoppingBag, AlertCircle, SlidersHorizontal, X, ArrowRight, ChevronDown, Star, BadgeCheck } from 'lucide-react'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'
 const ORDER_URL = 'https://bigbeancafe.store'
@@ -520,6 +520,33 @@ export default function Menu() {
           </div>
         </section>
 
+        {/* ── TRUST STRIP ─────────────────────────────────────── */}
+        <style>{`
+          @media (max-width: 900px) { .menu-trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
+          @media (max-width: 520px) { .menu-trust-grid { grid-template-columns: 1fr !important; padding: 0.8rem !important; border-radius: 22px !important; } .menu-trust-card { padding: 0.85rem !important; } }
+        `}</style>
+        <section style={{ maxWidth: 1280, margin: '-2rem auto 0', padding: '0 1.5rem', position: 'relative', zIndex: 5 }}>
+          <div
+            className="menu-trust-grid"
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '1rem', background: '#FFF7ED', border: '1px solid #E6C7A8', borderRadius: 28, padding: '1rem', boxShadow: '0 18px 50px rgba(61,31,13,0.10)' }}
+          >
+            {[
+              { icon: Coffee, title: 'Freshly Brewed Coffee' },
+              { icon: Leaf, title: 'Handcrafted Every Day' },
+              { icon: Star, title: 'Signature Café Favourites' },
+              { icon: BadgeCheck, title: 'Premium Quality Ingredients' },
+            ].map(({ icon: Icon, title }) => (
+              <div key={title} className="menu-trust-card"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderRadius: 20, padding: '1rem', background: 'linear-gradient(135deg,#FFFFFF 0%,#FFF3E0 100%)', border: '1px solid rgba(201,148,58,0.22)' }}>
+                <span style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(201,148,58,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon style={{ width: 19, height: 19, color: '#C9943A' }} />
+                </span>
+                <span style={{ fontSize: '0.86rem', fontWeight: 900, color: '#3D1F0D', lineHeight: 1.25 }}>{title}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ── MENU SECTION ──────────────────────────────────────── */}
         <section id="menu-section" style={{ maxWidth: 1400, margin: '0 auto', padding: '2.5rem 1.5rem 4rem' }}>
 
@@ -823,7 +850,7 @@ export default function Menu() {
             <Coffee style={{ width: 40, height: 40, color: '#C9943A', margin: '0 auto 1rem' }} />
             <h2 className="font-heading" style={{ fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 900, color: '#FFF7ED', marginBottom: '0.75rem' }}>Ready to Order?</h2>
             <p style={{ fontSize: '0.95rem', color: '#C7A489', lineHeight: 1.75, marginBottom: '1.8rem' }}>
-              Order on Zomato, Swiggy, or directly through our online store.
+              Enjoy your favourite coffee and food from Big Bean Cafe. Order online or visit our Koramangala café today.
             </p>
             <a href={ORDER_URL} target="_blank" rel="noopener noreferrer"
               style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#C9943A', color: '#120905', borderRadius: 100, padding: '0.9rem 2.2rem', fontSize: '0.82rem', fontWeight: 900, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.08em', boxShadow: '0 12px 32px rgba(201,148,58,0.30)', transition: 'all 0.22s' }}
