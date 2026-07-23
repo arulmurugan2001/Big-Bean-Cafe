@@ -391,20 +391,68 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* Bottom row */}
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <Link
-                  href="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="font-nav flex items-center justify-center gap-2 rounded-2xl border border-[#E6C7A8] py-3 text-xs font-extrabold uppercase tracking-[0.10em] text-[#3D1F0D] transition hover:bg-[#F5E6D3]"
-                >
-                  <User className="h-4 w-4" /> Login
-                </Link>
+              {/* Customer area */}
+              {customer ? (
+                <div className="mt-3 rounded-2xl border border-[#E6C7A8] bg-white overflow-hidden">
+                  {/* Avatar + name row */}
+                  <div className="flex items-center gap-3 px-4 py-3 border-b border-[#F5E6D3]" style={{ background: 'linear-gradient(135deg,#120905,#3D1F0D)' }}>
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#C9943A] text-[#120905] text-sm font-black">
+                      {customer.full_name?.[0]?.toUpperCase() || 'C'}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-black text-[#FFF7ED] truncate">{customer.full_name}</p>
+                      <p className="text-[10px] text-[#C7A489] truncate">{customer.email || customer.phone || ''}</p>
+                    </div>
+                  </div>
+                  {[
+                    { label: 'My Dashboard',   href: '/customer/dashboard' },
+                    { label: 'Order History',  href: '/customer/orders'    },
+                    { label: 'Wishlist',       href: '/customer/wishlist'  },
+                    { label: 'Profile',        href: '/customer/profile'   },
+                  ].map(item => (
+                    <Link key={item.href} href={item.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center px-4 py-3 text-sm font-bold text-[#3D1F0D] hover:bg-[#FFF7ED] transition border-b border-[#F5E6D3] last:border-0">
+                      {item.label}
+                    </Link>
+                  ))}
+                  <button
+                    onClick={() => {
+                      clearCustomerSession()
+                      setIsMenuOpen(false)
+                      router.push('/')
+                    }}
+                    className="flex w-full items-center px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="font-nav flex items-center justify-center gap-2 rounded-2xl border border-[#E6C7A8] py-3 text-xs font-extrabold uppercase tracking-[0.10em] text-[#3D1F0D] transition hover:bg-[#F5E6D3]"
+                  >
+                    <User className="h-4 w-4" /> Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="font-nav flex items-center justify-center gap-2 rounded-2xl border border-[#C9943A] py-3 text-xs font-extrabold uppercase tracking-[0.10em] text-[#C9943A] transition hover:bg-[#FFF7ED]"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
+
+              {/* Order Now — always visible */}
+              <div className="mt-2">
                 <a
                   href="https://bigbeancafe.store"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-nav flex items-center justify-center gap-2 rounded-2xl bg-[#3D1F0D] py-3 text-xs font-extrabold uppercase tracking-[0.10em] text-[#FFF7ED] shadow-md transition hover:bg-[#6B3520]"
+                  className="font-nav flex w-full items-center justify-center gap-2 rounded-2xl bg-[#3D1F0D] py-3 text-xs font-extrabold uppercase tracking-[0.10em] text-[#FFF7ED] shadow-md transition hover:bg-[#6B3520]"
                 >
                   Order Now
                 </a>
