@@ -15,6 +15,7 @@ interface Outlet {
   image: string | null
   status: string
   sort_order: number
+  slug?: string | null
 }
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').replace('/api', '')
@@ -37,9 +38,19 @@ export default function OutletsPreview() {
         if (!res.ok) throw new Error('Failed to fetch')
         const data = await res.json()
         console.log('Loaded outlets:', data)
-        const active = (data.data || [])
+        const rawOutlets: Outlet[] = Array.isArray(data) ? data : Array.isArray(data.data) ? data.data : []
+        const getOutletPriority = (o: Outlet) => {
+          const name = (o.name || '').toLowerCase()
+          const slug = (o.slug || '').toLowerCase()
+          return name.includes('koramangala') || slug.includes('koramangala') ? 0 : 1
+        }
+        const active = rawOutlets
           .filter((o: Outlet) => o.status === 'active')
-          .sort((a: Outlet, b: Outlet) => a.sort_order - b.sort_order || b.id - a.id)
+          .sort((a: Outlet, b: Outlet) => {
+            const pd = getOutletPriority(a) - getOutletPriority(b)
+            if (pd !== 0) return pd
+            return a.sort_order - b.sort_order || b.id - a.id
+          })
           .slice(0, 3)
         setOutlets(active)
       } catch {
@@ -56,7 +67,7 @@ export default function OutletsPreview() {
       <div className="container-custom">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4" style={{ color: '#3D1F0D' }}>
-            Visit Our Outlets
+            Visit Our Koramangala Cafe
           </h2>
           <p className="text-lg max-w-3xl mx-auto" style={{ color: '#6B3520' }}>
             Find your nearest Big Bean Café and enjoy coffee, food, and café moments.
