@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
-import { Coffee, Store, Users, Heart, Sparkles, MapPin, Award, Leaf, ArrowRight, Star, Smartphone, QrCode, Check } from 'lucide-react'
+import { Coffee, Store, Users, Heart, Sparkles, MapPin, Award, Leaf, ArrowRight, Star, Smartphone, QrCode, Check, Plus, Minus, HelpCircle } from 'lucide-react'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
 const API_BASE = API_URL.replace('/api', '')
@@ -170,11 +170,35 @@ function StoryImage() {
   )
 }
 
+const FAQS = [
+  {
+    q: 'Does Big Bean Cafe have multiple outlets in Bengaluru?',
+    a: 'Yes. Big Bean Cafe currently operates seven outlets across Bengaluru, making it easy for customers to enjoy our premium coffee and handcrafted food from multiple locations.',
+  },
+  {
+    q: 'Can I order online from Big Bean Cafe?',
+    a: 'Yes. Customers can currently order through Swiggy and Zomato. Our own website and mobile application will soon support direct online ordering.',
+  },
+  {
+    q: 'Do you serve breakfast?',
+    a: 'Yes. Our menu includes breakfast, handcrafted coffee, snacks, desserts and a variety of freshly prepared food.',
+  },
+  {
+    q: 'Where is the first Big Bean Cafe outlet?',
+    a: 'Big Bean Cafe started its journey with its first outlet in RR Nagar, Bengaluru.',
+  },
+  {
+    q: 'Do you offer dine-in and takeaway?',
+    a: 'Yes. All Big Bean Cafe outlets provide both dine-in and takeaway services.',
+  },
+]
+
 export default function AboutPage() {
   const [hero, setHero] = useState<HeroType>(DEFAULT_HERO)
   const [outlets, setOutlets] = useState<any[]>([])
   const [heroImg, setHeroImg] = useState<string | null>(null)
   const [appPromo, setAppPromo] = useState<AppPromoData>(APP_FALLBACK)
+  const [openFaq, setOpenFaq] = useState<number | null>(0)
 
   useEffect(() => {
     fetch(`${API_URL}/about-hero/active`)
@@ -200,11 +224,16 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen" style={{ background: '#FBF4EC' }}>
+      <style>{`
+        .about-hero { min-height: 520px; }
+        @media (max-width: 1024px) { .about-hero { min-height: 420px; } }
+        @media (max-width: 640px) { .about-hero { min-height: 360px; } }
+      `}</style>
       <Header />
       <main>
 
         {/* HERO */}
-        <section style={{ position: 'relative', minHeight: '720px', display: 'flex', alignItems: 'center', background: '#120905', overflow: 'hidden' }}>
+        <section className="about-hero" style={{ position: 'relative', display: 'flex', alignItems: 'center', background: '#120905', overflow: 'hidden' }}>
 
           {/* Background image — bright and visible */}
           {heroImg && (
@@ -219,7 +248,7 @@ export default function AboutPage() {
           <div style={{ position: 'absolute', top: -100, left: -100, width: 460, height: 460, borderRadius: '50%', background: 'radial-gradient(circle,rgba(201,148,58,0.14),transparent 70%)', zIndex: 1, pointerEvents: 'none' }} />
 
           {/* Left content — full width, max 620px */}
-          <div style={{ position: 'relative', zIndex: 2, maxWidth: 1320, margin: '0 auto', padding: '5rem 2rem 4rem', width: '100%' }}>
+          <div style={{ position: 'relative', zIndex: 2, maxWidth: 1320, margin: '0 auto', padding: '3rem 2rem 2.5rem', width: '100%' }}>
             <div style={{ maxWidth: 560 }}>
 
               {/* Eyebrow */}
@@ -320,9 +349,9 @@ export default function AboutPage() {
 
                 {/* Paragraphs */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontSize: '0.95rem', color: '#6B3520', lineHeight: 1.75 }}>
-                  <p style={{ margin: 0 }}>Big Bean Café was born from a simple idea — to create a space where great coffee, delicious food, and good vibes come together.</p>
-                  <p style={{ margin: 0 }}>From our first outlet to becoming a loved café brand across Bengaluru, our journey has been fueled by passion, people, and the perfect cup of coffee.</p>
-                  <p style={{ margin: 0 }}>Today we stand proud with multiple outlets, a growing community, and the same commitment to quality that started us on this journey.</p>
+                  <p style={{ margin: 0 }}>Big Bean Cafe began its journey in 2023 with its first outlet in RR Nagar, Bengaluru. What started as a passion for premium coffee has grown into a trusted café brand with seven outlets across the city.</p>
+                  <p style={{ margin: 0 }}> Every cup of coffee is prepared using ethically sourced and freshly roasted beans, paired with handcrafted food and exceptional hospitality.</p>
+                  <p style={{ margin: 0 }}>Our goal is to create welcoming spaces where friends, families, professionals and coffee lovers can relax, connect and enjoy memorable café experiences.</p>
                 </div>
 
                 {/* Signature */}
@@ -552,10 +581,10 @@ export default function AboutPage() {
               <div>
                 <p style={{ fontSize: '0.65rem', fontWeight: 900, letterSpacing: '0.22em', color: '#C9943A', textTransform: 'uppercase', marginBottom: '0.75rem' }}>OUR OUTLETS</p>
                 <h2 className="font-heading" style={{ fontSize: 'clamp(1.8rem,3vw,2.55rem)', fontWeight: 900, color: '#3D1F0D', lineHeight: 1.1, marginBottom: '1.5rem' }}>
-                  Seven Outlets,<br />One Big Family.
+                  Our Cafe Outlets,<br />Across Bengaluru.
                 </h2>
                 <p style={{ fontSize: '0.93rem', color: '#6B3520', lineHeight: 1.75, marginBottom: '2rem' }}>
-                  From HSR Layout to Kammanahalli, we&apos;ve created warm, welcoming spaces across Bengaluru for you to enjoy your favourite Big Bean moments.
+                  Visit Big Bean Cafe across Bengaluru, including Koramangala, RR Nagar, HSR Layout, Indiranagar, Electronic City, Jayanagar and Kammanahalli. Every outlet offers the same premium coffee, handcrafted food, warm hospitality and welcoming atmosphere. Fr
                 </p>
                 <a href="/outlets"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#3D1F0D', color: '#FFF7ED', borderRadius: 100, padding: '0.9rem 2rem', fontSize: '0.74rem', fontWeight: 900, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.25s' }}
@@ -618,6 +647,50 @@ export default function AboutPage() {
                   <p style={{ fontSize: '0.82rem', color: '#6B3520', lineHeight: 1.7 }}>{text}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section style={{ background: '#FBF4EC', padding: '4rem 2rem' }}>
+          <div style={{ maxWidth: 820, margin: '0 auto' }}>
+            {/* Heading */}
+            <div style={{ textAlign: 'center', marginBottom: '2.8rem' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(201,148,58,0.12)', border: '1px solid rgba(201,148,58,0.3)', borderRadius: 100, padding: '0.35rem 0.9rem', marginBottom: '1rem' }}>
+                <HelpCircle style={{ width: 13, height: 13, color: '#C9943A' }} />
+                <span style={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: '0.22em', color: '#C9943A', textTransform: 'uppercase' }}>FAQ</span>
+              </div>
+              <h2 className="font-heading" style={{ fontSize: 'clamp(1.7rem,3vw,2.4rem)', fontWeight: 900, color: '#3D1F0D', lineHeight: 1.1, margin: 0 }}>Frequently Asked Questions</h2>
+              <p style={{ marginTop: '0.85rem', fontSize: '0.92rem', color: '#6B3520', lineHeight: 1.7 }}>Everything you need to know about Big Bean Café.</p>
+            </div>
+
+            {/* Accordion */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {FAQS.map((faq, i) => {
+                const isOpen = openFaq === i
+                return (
+                  <div key={i}
+                    style={{ background: '#FFF7ED', border: `1px solid ${isOpen ? '#C9943A' : '#E6C7A8'}`, borderRadius: 20, overflow: 'hidden', boxShadow: isOpen ? '0 8px 28px rgba(61,31,13,0.08)' : '0 2px 12px rgba(61,31,13,0.04)', transition: 'all 0.25s' }}>
+                    <button
+                      onClick={() => setOpenFaq(isOpen ? null : i)}
+                      style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', padding: '1.25rem 1.5rem', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
+                      <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#3D1F0D', lineHeight: 1.4, flex: 1 }}>{faq.q}</span>
+                      <span style={{ flexShrink: 0, width: 28, height: 28, borderRadius: '50%', background: isOpen ? '#C9943A' : 'rgba(201,148,58,0.12)', border: `1.5px solid ${isOpen ? '#C9943A' : '#E6C7A8'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.25s' }}>
+                        {isOpen
+                          ? <Minus style={{ width: 13, height: 13, color: '#fff' }} />
+                          : <Plus style={{ width: 13, height: 13, color: '#C9943A' }} />
+                        }
+                      </span>
+                    </button>
+                    {isOpen && (
+                      <div style={{ padding: '0 1.5rem 1.35rem' }}>
+                        <div style={{ width: 32, height: 2, background: '#C9943A', borderRadius: 2, marginBottom: '0.85rem' }} />
+                        <p style={{ fontSize: '0.88rem', color: '#6B3520', lineHeight: 1.75, margin: 0 }}>{faq.a}</p>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </div>
         </section>
