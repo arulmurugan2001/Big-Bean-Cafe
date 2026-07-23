@@ -422,48 +422,45 @@ export default function Outlets() {
 
         {/* ── LOCATOR SECTION ──────────────────────────────────────── */}
         {!loading && !error && outlets.length > 0 && (
-          <section style={{ maxWidth: 1280, margin: '0 auto 3rem', padding: '0 2rem' }}>
-            <div style={{ borderRadius: 36, background: 'linear-gradient(135deg,#120905 0%,#3D1F0D 60%,#6B3520 100%)', overflow: 'hidden', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+          <section className={s.locatorSectionWrapper}>
+            <div className={s.locatorSection}>
+              <div className={s.locatorGlow} />
+
               {/* Left content */}
-              <div style={{ padding: '3.5rem 3rem' }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(201,148,58,0.14)', border: '1px solid rgba(201,148,58,0.28)', borderRadius: 100, padding: '0.4rem 1rem', marginBottom: '1.5rem' }}>
-                  <Coffee style={{ width: 13, height: 13, color: '#C9943A' }} />
-                  <span style={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: '0.22em', color: '#F3D59B', textTransform: 'uppercase' }}>Find Us</span>
+              <div className={s.locatorLeft}>
+                <div className={s.locatorBadge}>
+                  <Coffee size={13} />
+                  <span>Find Us</span>
                 </div>
-                <h2 className="font-heading" style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 900, color: '#FFF7ED', lineHeight: 1.15, marginBottom: '1.2rem' }}>
+                <h2 className={`font-heading ${s.locatorTitle}`}>
                   Big Bean Café<br />
-                  <span style={{ background: 'linear-gradient(90deg,#F6D58D,#C9943A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Across Bengaluru</span>
+                  <span>Across Bengaluru</span>
                 </h2>
-                <p style={{ fontSize: '0.9rem', color: '#C7A489', lineHeight: 1.8, marginBottom: '2rem', maxWidth: 380 }}>
+                <p className={s.locatorSubtitle}>
                   From HSR Layout to Koramangala, Electronic City, RR Nagar and more — our outlets are designed for coffee, food, work and conversations.
                 </p>
-                <a href="#outlet-list"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#C9943A', color: '#120905', borderRadius: 100, padding: '0.75rem 1.6rem', fontSize: '0.76rem', fontWeight: 900, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.08em', transition: 'all 0.22s' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#F6D58D' }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#C9943A' }}>
-                  <MapPin style={{ width: 13, height: 13 }} /> View All Outlets
+                <a href="#outlet-list" className={s.locatorButton}>
+                  <MapPin size={13} /> View All Outlets
                 </a>
               </div>
 
               {/* Right outlet list card */}
-              <div style={{ background: 'rgba(255,247,237,0.06)', borderLeft: '1px solid rgba(201,148,58,0.18)', padding: '3rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                <p style={{ fontSize: '0.65rem', fontWeight: 900, letterSpacing: '0.2em', color: '#C9943A', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Our Outlet Locations</p>
-                {outlets.slice(0, 5).map((o, i) => (
-                  <div key={o.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.9rem', padding: '0.8rem', borderRadius: 14, background: 'rgba(255,247,237,0.05)', border: '1px solid rgba(201,148,58,0.12)', transition: 'all 0.2s' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(201,148,58,0.1)' }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,247,237,0.05)' }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(201,148,58,0.2)', border: '1px solid rgba(201,148,58,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <MapPin style={{ width: 14, height: 14, color: '#C9943A' }} />
+              <div className={s.locatorRight}>
+                <p className={s.locatorHeading}>Our Outlet Locations</p>
+                {outlets.slice(0, 5).map((o) => (
+                  <div key={o.id} className={s.locatorItem}>
+                    <div className={s.locatorItemIcon}>
+                      <MapPin size={14} />
                     </div>
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FFF7ED', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{o.name}</div>
-                      <div style={{ fontSize: '0.73rem', color: '#C7A489', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{o.address}</div>
+                    <div className={s.locatorItemText}>
+                      <div className={s.locatorItemTitle}>{o.name}</div>
+                      <div className={s.locatorItemAddress}>{o.address}</div>
                     </div>
                   </div>
                 ))}
                 {outlets.length > 5 && (
-                  <a href="#outlet-list" style={{ fontSize: '0.76rem', color: '#C9943A', fontWeight: 700, textDecoration: 'none', textAlign: 'center', marginTop: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
-                    +{outlets.length - 5} more outlets <ArrowRight style={{ width: 12, height: 12 }} />
+                  <a href="#outlet-list" className={s.locatorMore}>
+                    +{outlets.length - 5} more outlets <ArrowRight size={12} />
                   </a>
                 )}
               </div>
