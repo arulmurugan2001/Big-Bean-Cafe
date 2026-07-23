@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { getPublicSettings, formatPhoneForTel, CONTACT_DEFAULTS, type PublicContactSettings } from '@/lib/publicSettings'
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 import {
@@ -75,7 +76,7 @@ const contactCards = [
     title: 'Customer Support',
     text: 'For order support, feedback and café experience',
     btn: 'Call Now',
-    href: 'tel:+919876543210'
+    href: 'CONTACT_PHONE_PLACEHOLDER'
   },
   {
     icon: Building2,
@@ -124,6 +125,7 @@ export default function ContactPage() {
   const [outlets, setOutlets] = useState<Outlet[]>([])
   const [loadingHero, setLoadingHero] = useState(true)
   const [loadingOutlets, setLoadingOutlets] = useState(true)
+  const [pubSettings, setPubSettings] = useState<PublicContactSettings>(CONTACT_DEFAULTS)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [form, setForm] = useState({
     name: '',
@@ -157,6 +159,7 @@ export default function ContactPage() {
     }
     loadHero()
     loadOutlets()
+    getPublicSettings().then(setPubSettings).catch(() => {})
   }, [])
 
   const heroImg = getImageUrl(hero.image)
@@ -288,8 +291,12 @@ export default function ContactPage() {
             <h2 className="font-heading font-black text-[clamp(1.8rem,3.5vw,2.6rem)]" style={{ color: '#3D1F0D', lineHeight: 1.1 }}>How Can We Help?</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {contactCards.map((c, i) => (
-              <a key={i} href={c.href} className="group block rounded-[28px] p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+            {contactCards.map((c, i) => {
+              const href = c.href === 'CONTACT_PHONE_PLACEHOLDER'
+                ? `tel:${formatPhoneForTel(pubSettings.contact_phone)}`
+                : c.href
+              return (
+              <a key={i} href={href} className="group block rounded-[28px] p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                 style={{ background: '#FFF7ED', border: '1px solid #E6C7A8' }}>
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
                   style={{ background: 'rgba(201,148,58,0.12)', border: '1px solid rgba(201,148,58,0.25)' }}>
@@ -301,7 +308,8 @@ export default function ContactPage() {
                   {c.btn} <ArrowRight style={{ width: 12, height: 12 }} />
                 </span>
               </a>
-            ))}
+              )
+            })}
           </div>
         </section>
 
@@ -393,7 +401,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <div className="text-[0.65rem] font-black uppercase tracking-[0.12em] opacity-70 mb-0.5">Phone</div>
-                      <div className="text-sm font-semibold">+91 98765 43210</div>
+                      <a href={`tel:${formatPhoneForTel(pubSettings.contact_phone)}`} className="text-sm font-semibold hover:text-[#C9943A] transition-colors">{pubSettings.contact_phone}</a>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -402,7 +410,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <div className="text-[0.65rem] font-black uppercase tracking-[0.12em] opacity-70 mb-0.5">Email</div>
-                      <div className="text-sm font-semibold">info@bigbeancafe.in</div>
+                      <a href={`mailto:${pubSettings.contact_email}`} className="text-sm font-semibold hover:text-[#C9943A] transition-colors">{pubSettings.contact_email}</a>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

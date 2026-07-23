@@ -55,7 +55,7 @@ const ensureTables = async () => {
 // ─── Secret keys ──────────────────────────────────────────────────────────────
 const SECRET_KEYS = new Set([
   'razorpay_key_secret', 'razorpay_webhook_secret', 'smtp_password',
-  'msg91_auth_key', 'whatsapp_api_key', 'instagram_access_token',
+  'msg91_auth_key', 'whatsapp_api_key', 'whatsapp_access_token', 'instagram_access_token',
   'captcha_secret_key',
 ]);
 const MASK = '********';
@@ -72,7 +72,7 @@ const SEED = [
   { k: 'language',            v: 'en',                             g: 'general',  t: 'text',     pub: 1 },
   { k: 'business_type',       v: 'Café & Coffee Roasters',         g: 'general',  t: 'text',     pub: 1 },
   { k: 'contact_email',       v: 'info@bigbeancafe.in',            g: 'general',  t: 'email',    pub: 1 },
-  { k: 'contact_phone',       v: '+91 98765 43210',                g: 'general',  t: 'text',     pub: 1 },
+  { k: 'contact_phone',       v: '8073601065',                     g: 'general',  t: 'text',     pub: 1 },
   { k: 'address',             v: 'Bengaluru, Karnataka, India',    g: 'general',  t: 'textarea', pub: 1 },
   // branding
   { k: 'logo_url',            v: '/logo/big-bean-cafe-logo-transparent.png', g: 'branding', t: 'url', pub: 1 },
@@ -135,7 +135,21 @@ const SEED = [
   { k: 'whatsapp_enabled',         v: '0', g: 'sms_whatsapp', t: 'toggle',   pub: 0 },
   { k: 'whatsapp_provider',        v: '',  g: 'sms_whatsapp', t: 'text',     pub: 0 },
   { k: 'whatsapp_api_key',         v: '',  g: 'sms_whatsapp', t: 'password', pub: 0, sec: 1 },
+  { k: 'whatsapp_access_token',    v: '',  g: 'sms_whatsapp', t: 'password', pub: 0, sec: 1 },
+  { k: 'whatsapp_phone_number_id', v: '',  g: 'sms_whatsapp', t: 'text',     pub: 0 },
   { k: 'whatsapp_business_number', v: '',  g: 'sms_whatsapp', t: 'text',     pub: 0 },
+  // contact
+  { k: 'reservations_phone',  v: '8073601065',               g: 'contact', t: 'text',  pub: 1 },
+  { k: 'reservations_email',  v: 'bookings@bigbeancafe.in',  g: 'contact', t: 'email', pub: 1 },
+  { k: 'franchise_phone',     v: '8867671422',               g: 'contact', t: 'text',  pub: 1 },
+  { k: 'franchise_email',     v: 'franchise@bigbeancafe.in', g: 'contact', t: 'email', pub: 1 },
+  { k: 'corporate_phone',     v: '8073601065',               g: 'contact', t: 'text',  pub: 1 },
+  { k: 'corporate_email',     v: 'bookings@bigbeancafe.in',  g: 'contact', t: 'email', pub: 1 },
+  { k: 'career_phone',        v: '8073601065',               g: 'contact', t: 'text',  pub: 1 },
+  { k: 'career_email',        v: 'jobs@bigbeancafe.in',      g: 'contact', t: 'email', pub: 1 },
+  { k: 'event_phone',         v: '8073601065',               g: 'contact', t: 'text',  pub: 1 },
+  { k: 'event_email',         v: 'events@bigbeancafe.in',    g: 'contact', t: 'email', pub: 1 },
+  { k: 'no_reply_email',      v: 'noreply@bigbeancafe.in',   g: 'contact', t: 'email', pub: 0 },
   // outlets
   { k: 'default_outlet_id',         v: '',    g: 'outlets', t: 'text',   pub: 0 },
   { k: 'show_outlet_status',        v: '1',   g: 'outlets', t: 'toggle', pub: 1 },

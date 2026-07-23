@@ -8,6 +8,7 @@ import {
   Briefcase, MapPin, Phone, Mail, CheckCircle, TrendingUp, Award,
   Users, BadgeCheck, Store, Sparkles, ChevronRight, ArrowRight, Coffee
 } from 'lucide-react'
+import { getPublicSettings, formatPhoneForTel, CONTACT_DEFAULTS, type PublicContactSettings } from '@/lib/publicSettings'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
 const API_BASE = API_URL.replace('/api', '')
@@ -71,12 +72,14 @@ export default function Franchise() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const [submittedEnquiry, setSubmittedEnquiry] = useState<{ name: string; city: string; state: string; investmentRange: string } | null>(null)
+  const [pubSettings, setPubSettings] = useState<PublicContactSettings>(CONTACT_DEFAULTS)
 
   useEffect(() => {
     fetch(`${API_URL}/franchise-hero/active`)
       .then(r => r.json())
       .then(d => { if (d.success && d.data) setHero(d.data) })
       .catch(() => {})
+    getPublicSettings().then(setPubSettings).catch(() => {})
   }, [])
 
   const h = hero || defaultHero
@@ -419,8 +422,8 @@ export default function Franchise() {
                 <div className="rounded-3xl p-6 border" style={{ background: '#FFF7ED', borderColor: '#E6C7A8' }}>
                   <p className="text-xs font-bold tracking-widest mb-4" style={{ color: '#C9943A' }}>CONTACT OUR TEAM</p>
                   <div className="space-y-3">
-                    <a href="mailto:franchise@bigbeancafe.in" className="flex items-center gap-3 text-sm hover:underline" style={{ color: '#3D1F0D' }}>
-                      <Mail className="w-4 h-4 flex-shrink-0" style={{ color: '#C9943A' }} />franchise@bigbeancafe.in
+                    <a href={`mailto:${pubSettings.franchise_email}`} className="flex items-center gap-3 text-sm hover:underline" style={{ color: '#3D1F0D' }}>
+                      <Mail className="w-4 h-4 flex-shrink-0" style={{ color: '#C9943A' }} />{pubSettings.franchise_email}
                     </a>
                     <div className="flex items-center gap-3 text-sm" style={{ color: '#3D1F0D' }}>
                       <MapPin className="w-4 h-4 flex-shrink-0" style={{ color: '#C9943A' }} />Bangalore, India
@@ -466,9 +469,9 @@ export default function Franchise() {
                 style={{ background: 'linear-gradient(to right,#C9943A,#8B4A2F)' }}>
                 Submit Enquiry <ArrowRight className="w-4 h-4" />
               </a>
-              <a href="mailto:franchise@bigbeancafe.in" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-sm font-bold border-2 transition-all hover:-translate-y-0.5"
+              <a href={`mailto:${pubSettings.franchise_email}`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-sm font-bold border-2 transition-all hover:-translate-y-0.5"
                 style={{ borderColor: '#C9943A', color: '#C9943A' }}>
-                <Mail className="w-4 h-4" /> franchise@bigbeancafe.in
+                <Mail className="w-4 h-4" /> {pubSettings.franchise_email}
               </a>
               <Link href="/outlets" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-sm font-bold border-2 transition-all hover:-translate-y-0.5"
                 style={{ borderColor: 'rgba(255,247,237,0.25)', color: '#F5E6D3' }}>

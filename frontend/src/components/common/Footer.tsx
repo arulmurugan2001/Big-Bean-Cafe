@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { MapPin, Mail, Globe, Facebook, Instagram, Youtube, Linkedin, Twitter, Send, ArrowRight } from 'lucide-react'
+import { MapPin, Mail, Phone, Globe, Facebook, Instagram, Youtube, Linkedin, Twitter, Send, ArrowRight } from 'lucide-react'
 import s from './Footer.module.css'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
@@ -13,6 +13,7 @@ type PublicSettings = Record<string, string>
 const DEFAULTS: PublicSettings = {
   site_name: 'Big Bean Café',
   footer_description: 'Fresh coffee, handcrafted beverages, café bites, desserts, and cozy café moments across Big Bean Café outlets.',
+  contact_phone: '8073601065',
   contact_email: 'info@bigbeancafe.in',
   address: 'Bengaluru, Karnataka',
   website_url: 'https://www.bigbeancafe.in',
@@ -180,6 +181,12 @@ export default function Footer() {
                 <div className={s.contactItem}>
                   <MapPin className={s.contactIcon} />
                   <span>{g('address')}</span>
+                </div>
+              )}
+              {g('contact_phone') && (
+                <div className={s.contactItem}>
+                  <Phone className={s.contactIcon} />
+                  <a href={`tel:${g('contact_phone').replace(/\s+/g, '')}`}>{g('contact_phone')}</a>
                 </div>
               )}
               {g('contact_email') && (

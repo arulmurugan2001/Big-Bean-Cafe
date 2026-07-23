@@ -8,6 +8,7 @@ import {
   Briefcase, MapPin, Clock, Users, Search, ArrowRight,
   CheckCircle, Upload, Mail, Phone, Star, ChevronDown, X
 } from 'lucide-react'
+import { getPublicSettings, formatPhoneForTel, CONTACT_DEFAULTS, type PublicContactSettings } from '@/lib/publicSettings'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
 const API_BASE_URL = API_URL.replace('/api', '')
@@ -164,6 +165,7 @@ export default function Careers() {
     name: '', email: '', phone: '', experience: '',
     education: '', skills: '', expectedSalary: '', noticePeriod: '', coverLetter: ''
   })
+  const [pubSettings, setPubSettings] = useState<PublicContactSettings>(CONTACT_DEFAULTS)
 
   useEffect(() => {
     Promise.allSettled([
@@ -174,6 +176,7 @@ export default function Careers() {
       if (jobsRes.status === 'fulfilled' && jobsRes.value.success) setJobs(jobsRes.value.data || [])
       setLoading(false)
     })
+    getPublicSettings().then(setPubSettings).catch(() => {})
   }, [])
 
   const departments = ['all', ...Array.from(new Set(jobs.map(j => j.department).filter(Boolean) as string[]))]
@@ -658,13 +661,13 @@ export default function Careers() {
                   <div className="rounded-[24px] p-6" style={{ background: 'linear-gradient(135deg,#3D1F0D,#6B3520)' }}>
                     <p className="font-bold text-base font-heading mb-4" style={{ color: '#FFF7ED' }}>HR Contact</p>
                     <div className="space-y-3">
-                      <a href="mailto:careers@bigbeancafe.in" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: '#F5E6D3' }}>
+                      <a href={`mailto:${pubSettings.career_email}`} className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: '#F5E6D3' }}>
                         <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/10"><Mail className="w-4 h-4" /></div>
-                        careers@bigbeancafe.in
+                        {pubSettings.career_email}
                       </a>
-                      <a href="tel:+919876543210" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: '#F5E6D3' }}>
+                      <a href={`tel:${formatPhoneForTel(pubSettings.career_phone)}`} className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: '#F5E6D3' }}>
                         <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/10"><Phone className="w-4 h-4" /></div>
-                        +91 98765 43210
+                        {pubSettings.career_phone}
                       </a>
                       <Link href="/outlets" className="flex items-center gap-3 text-sm hover:opacity-80 transition-opacity" style={{ color: '#F5E6D3' }}>
                         <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/10"><MapPin className="w-4 h-4" /></div>
@@ -688,10 +691,10 @@ export default function Careers() {
                 <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4" style={{ color: '#FFF7ED' }}>Have Questions About Careers?</h2>
                 <p className="text-base mb-8 max-w-md mx-auto" style={{ color: '#F5E6D3' }}>Our HR team is happy to help you find the right opportunity at Big Bean Café.</p>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <a href="mailto:careers@bigbeancafe.in"
+                  <a href={`mailto:${pubSettings.career_email}`}
                     className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold text-white"
                     style={{ background: 'linear-gradient(to right,#C9943A,#8B4A2F)' }}>
-                    <Mail className="w-4 h-4" /> careers@bigbeancafe.in
+                    <Mail className="w-4 h-4" /> {pubSettings.career_email}
                   </a>
                   <a href="#career-application"
                     className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold border-2 hover:bg-white/10 transition-all"

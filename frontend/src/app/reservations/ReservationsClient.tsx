@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 import { Calendar, Clock, Users, MapPin, CheckCircle, Phone, Loader2, Navigation } from 'lucide-react'
+import { getPublicSettings, formatPhoneForTel, CONTACT_DEFAULTS, type PublicContactSettings } from '@/lib/publicSettings'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
 const API_BASE_URL = API_URL.replace('/api', '')
+
 
 interface Outlet {
   id: number
@@ -61,10 +63,12 @@ export default function Reservations() {
   const [selectedOutlet, setSelectedOutlet] = useState<Outlet | null>(null)
   const [hero, setHero] = useState<ReservationHero | null>(null)
   const [heroLoading, setHeroLoading] = useState(true)
+  const [pubSettings, setPubSettings] = useState<PublicContactSettings>(CONTACT_DEFAULTS)
 
   useEffect(() => {
     fetchOutlets()
     fetchHero()
+    getPublicSettings().then(setPubSettings).catch(() => {})
   }, [])
 
   const fetchOutlets = async () => {
@@ -614,9 +618,9 @@ export default function Reservations() {
                   <Phone className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-lg font-bold font-heading mb-2" style={{ color: '#3D1F0D' }}>Call Us</h3>
-                <p className="text-sm mb-4" style={{ color: '#6B3520' }}>{selectedOutlet?.phone || '+91 98765 43210'}</p>
+                <p className="text-sm mb-4" style={{ color: '#6B3520' }}>{selectedOutlet?.phone || pubSettings.reservations_phone}</p>
                 <a 
-                  href={`tel:${selectedOutlet?.phone || '+919876543210'}`}
+                  href={`tel:${formatPhoneForTel(selectedOutlet?.phone || pubSettings.reservations_phone)}`}
                   className="inline-block px-6 py-2 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90"
                   style={{ background: 'linear-gradient(to right, #C9943A, #8B4A2F)' }}
                 >

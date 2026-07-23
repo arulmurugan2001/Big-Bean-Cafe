@@ -10,6 +10,7 @@ import {
   Sparkles, BadgeCheck, Store, UtensilsCrossed, Star,
   ChevronDown, ChevronUp, Clock
 } from 'lucide-react'
+import { getPublicSettings, formatPhoneForTel, CONTACT_DEFAULTS, type PublicContactSettings } from '@/lib/publicSettings'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
 const API_BASE_URL = API_URL.replace('/api', '')
@@ -190,12 +191,14 @@ export default function CorporateOrders() {
     companyName: string; contactPerson: string; email: string; phone: string; orderType: string
   } | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
+  const [pubSettings, setPubSettings] = useState<PublicContactSettings>(CONTACT_DEFAULTS)
 
   useEffect(() => {
     fetch(`${API_URL}/corporate-hero/active`)
       .then(r => r.json())
       .then(d => { if (d.success && d.data) setHero(d.data) })
       .catch(() => {})
+    getPublicSettings().then(setPubSettings).catch(() => {})
   }, [])
 
   const h = hero || defaultHero
@@ -685,8 +688,8 @@ export default function CorporateOrders() {
                       <p className="text-xs font-black uppercase tracking-[0.15em] text-[#C9943A]">Contact Our Team</p>
                     </div>
                     <div className="space-y-4">
-                      <a href="mailto:corporate@bigbeancafe.in" className="flex items-center gap-3 text-sm text-[#3D1F0D] transition-colors hover:text-[#C9943A]">
-                        <Mail className="h-4 w-4 flex-shrink-0 text-[#C9943A]" />corporate@bigbeancafe.in
+                      <a href={`mailto:${pubSettings.corporate_email}`} className="flex items-center gap-3 text-sm text-[#3D1F0D] transition-colors hover:text-[#C9943A]">
+                        <Mail className="h-4 w-4 flex-shrink-0 text-[#C9943A]" />{pubSettings.corporate_email}
                       </a>
                       <div className="flex items-center gap-3 text-sm text-[#3D1F0D]">
                         <MapPin className="h-4 w-4 flex-shrink-0 text-[#C9943A]" />Bangalore, India
@@ -698,7 +701,7 @@ export default function CorporateOrders() {
                   <div className="rounded-[28px] border border-[#E6C7A8] bg-white p-6">
                     <p className="mb-3 text-sm font-black text-[#120905]">Need a quick quote?</p>
                     <p className="mb-4 text-xs leading-relaxed text-[#6B3520]">Share the basics and our corporate team will call you back the same business day.</p>
-                    <a href="tel:+919876543210" className="inline-flex items-center gap-2 rounded-full border-2 border-[#C9943A] px-5 py-2.5 text-xs font-black text-[#8B4A2F] transition-all hover:bg-[#C9943A]/10">
+                    <a href={`tel:${formatPhoneForTel(pubSettings.corporate_phone)}`} className="inline-flex items-center gap-2 rounded-full border-2 border-[#C9943A] px-5 py-2.5 text-xs font-black text-[#8B4A2F] transition-all hover:bg-[#C9943A]/10">
                       <PhoneIcon /> Call Us
                     </a>
                   </div>
@@ -720,8 +723,8 @@ export default function CorporateOrders() {
                   style={{ background: 'linear-gradient(to right,#C9943A,#8B4A2F)' }}>
                   Request Quote <ArrowRight className="h-4 w-4" />
                 </a>
-                <a href="mailto:corporate@bigbeancafe.in" className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#C9943A] px-8 py-4 text-sm font-black text-[#C9943A] transition-all hover:-translate-y-0.5 hover:bg-[#C9943A]/10">
-                  <Mail className="h-4 w-4" /> corporate@bigbeancafe.in
+                <a href={`mailto:${pubSettings.corporate_email}`} className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#C9943A] px-8 py-4 text-sm font-black text-[#C9943A] transition-all hover:-translate-y-0.5 hover:bg-[#C9943A]/10">
+                  <Mail className="h-4 w-4" /> {pubSettings.corporate_email}
                 </a>
                 <Link href="/outlets" className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/20 px-8 py-4 text-sm font-black text-[#F5E6D3] transition-all hover:-translate-y-0.5 hover:bg-white/10">
                   Visit Outlets
